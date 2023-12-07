@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>RSI</title>
+    <link>https://www.rsiproject.org/blog/</link>
+    <description>Recent content on RSI</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>pt-br</language>
+    <lastBuildDate>Tue, 05 Dec 2023 09:03:20 -0800</lastBuildDate>
+    <atom:link href="https://www.rsiproject.org/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Escrevendo Aplicações Nativas para Windows - Parte 1</title>
+      <link>https://www.rsiproject.org/blog/posts/construindo-ambiente/</link>
+      <pubDate>Tue, 05 Dec 2023 09:03:20 -0800</pubDate>
+      <guid>https://www.rsiproject.org/blog/posts/construindo-ambiente/</guid>
+      <description>Por Davi Chaves
+O objetivo desse artigo é montarmos um binário que dependa exclusivamente da ntdll.dll. Abaixo estão algumas funções exportadas por essa biblioteca.
+Using Native Functions Antes de construirmos uma aplicação que dependa apenas da ntdll.dll, vamos primeiro aprender a como utilizar as funções dessa biblioteca.
+Primeiro Método: Dynamic Linking Como toda função exportada, podemos utilizar a função GetProcAddress para acharmos o endereço de uma certa função e chama-la quando quisermos.</description>
+    </item>
+    <item>
+      <title></title>
+      <link>https://www.rsiproject.org/blog/authors/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://www.rsiproject.org/blog/authors/</guid>
+      <description>Autores e mantenedores do blog Mateus Santos - (Bolsista Voluntário)
+Linkedin
+Área de atuação: Engenharia Reversa/Análise de Malware
+Pesquisador de ameaças, mantenedor do blog e membro do RSI desde 2018.
+Davi Chaves - (Bolsista Voluntário)
+Linkedin
+Área de atuação: Engenharia Reversa/Windows Internals/Malware
+Atualmente cursando Ciência da Computação na UFC. Já desenvolvi diversos sites e aplicativos mobile, mas atualmente estou me especializando na área de segurança da informação, mais especificamente, na área de engenharia reversa/Windows Internals/Malware.</description>
+    </item>
+  </channel>
+</rss>
