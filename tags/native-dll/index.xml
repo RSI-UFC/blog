@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>native-dll on RSI</title>
+    <link>https://blog.rsiproject.org/tags/native-dll/</link>
+    <description>Recent content in native-dll on RSI</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>pt-br</language>
+    <lastBuildDate>Tue, 05 Dec 2023 09:03:20 -0800</lastBuildDate>
+    <atom:link href="https://blog.rsiproject.org/tags/native-dll/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Escrevendo Aplicações Nativas para Windows - Parte 1</title>
+      <link>https://blog.rsiproject.org/posts/construindo-ambiente/</link>
+      <pubDate>Tue, 05 Dec 2023 09:03:20 -0800</pubDate>
+      <guid>https://blog.rsiproject.org/posts/construindo-ambiente/</guid>
+      <description>Por Davi Chaves
+O objetivo desse artigo é montarmos um binário que dependa exclusivamente da ntdll.dll. Abaixo estão algumas funções exportadas por essa biblioteca.
+Using Native Functions Antes de construirmos uma aplicação que dependa apenas da ntdll.dll, vamos primeiro aprender a como utilizar as funções dessa biblioteca.
+Primeiro Método: Dynamic Linking Como toda função exportada, podemos utilizar a função GetProcAddress para acharmos o endereço de uma certa função e chama-la quando quisermos.</description>
+    </item>
+  </channel>
+</rss>

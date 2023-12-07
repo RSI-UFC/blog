@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html class="no-js" lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#1b1b1b">
+	<title>Escrevendo Aplicações Nativas para Windows - Parte 1 | RSI</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="stylesheet" href="/css/bundle.css">
+	<link rel="icon" href="/icons/16.png" sizes="16x16" type="image/png">
+	<link rel="icon" href="/icons/32.png" sizes="32x32" type="image/png">
+		
+</head>
+<body class="body kind-page">
+	<header class="header">
+	<a class="logo" href="/">RSI</a>
+	
+<nav class="main-nav" role="navigation">
+	<button id="toggle" class="main-nav__btn" aria-label="Menu toggle" aria-expanded="false" tabindex="0">
+		<div class="main-nav__btn-box" tabindex="-1">
+			<svg class="main-nav__icon icon-menu" width="18" height="18" viewBox="0 0 18 18">
+				<path class="icon-menu__burger" d="M18 0v3.6H0V0h18zM0 10.8h18V7.2H0v3.6zM0 18h18v-3.6H0V18z"/>
+				<path class="icon-menu__x" d="M11.55 9L18 15.45 15.45 18 9 11.55 2.55 18 0 15.45 6.45 9 0 2.55 2.55 0 9 6.45 15.45 0 18 2.55 11.55 9z"/>
+			</svg>
+		</div>
+	</button>
+	<ul id="menu" class="main-nav__list">
+			<li class="main-nav__item">
+				<a class="main-nav__link" href="/authors/">
+					
+					<span class="main-nav__text">Autores</span>
+					
+				</a>
+			</li>
+			<li class="main-nav__item">
+				<a class="main-nav__link" href="/tags/">
+					
+					<span class="main-nav__text">Tags</span>
+					
+				</a>
+			</li>
+			<li class="main-nav__item main-nav__item--active">
+				
+					
+					<span class="main-nav__text">Posts</span>
+					
+				
+			</li>
+	</ul>
+</nav>
+</header>
+	<div class="primary">
+	
+	<main class="main">
+		
+		<div class="single block">
+			<article class="entry">
+				<h1 class="entry__title">Escrevendo Aplicações Nativas para Windows - Parte 1</h1>
+				<div class="entry__content"><blockquote>
+<p><em>Por Davi Chaves</em></p>
+</blockquote>
+<p>O objetivo desse artigo é montarmos um binário que dependa exclusivamente da <em>ntdll.dll</em>. Abaixo estão algumas funções exportadas por essa biblioteca.</p>
+<p><img src="images/Pasted_image_20231203154324.png" alt="centralized"></p>
+<h1 id="using-native-functions">Using Native Functions</h1>
+<p>Antes de construirmos uma aplicação que dependa apenas da <em>ntdll.dll</em>, vamos primeiro aprender a como utilizar as funções dessa biblioteca.</p>
+<h2 id="primeiro-método-dynamic-linking">Primeiro Método: Dynamic Linking</h2>
+<p>Como toda função exportada, podemos utilizar a função <em>GetProcAddress</em> para acharmos o endereço de uma certa função e chama-la quando quisermos. É importante perceber que o código abaixo faz é apenas pegar o endereço de uma função e chama-lá. Essa técnica poderia ser usada para linkar quaisquer funções de outras bibliotecas.</p>
+<p>Note que ainda temos que adicionar de forma manual essas definições (ex.: SYSTEM_BASIC_INFORMATION).</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;Windows.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">enum</span> _SYSTEM_INFORMATION_CLASS {
+</span></span><span style="display:flex;"><span>    SystemBasicInformation,
+</span></span><span style="display:flex;"><span>} SYSTEM_INFORMATION_CLASS;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _SYSTEM_BASIC_INFORMATION {
+</span></span><span style="display:flex;"><span>    ULONG Reserved;
+</span></span><span style="display:flex;"><span>    ULONG TimerResolution;
+</span></span><span style="display:flex;"><span>    ULONG PageSize;
+</span></span><span style="display:flex;"><span>    ULONG NumberOfPhysicalPages;
+</span></span><span style="display:flex;"><span>    ULONG LowestPhysicalPageNumber;
+</span></span><span style="display:flex;"><span>    ULONG HighestPhysicalPageNumber;
+</span></span><span style="display:flex;"><span>    ULONG AllocationGranularity;
+</span></span><span style="display:flex;"><span>    ULONG_PTR MinimumUserModeAddress;
+</span></span><span style="display:flex;"><span>    ULONG_PTR MaximumUserModeAddress;
+</span></span><span style="display:flex;"><span>    ULONG_PTR ActiveProcessorsAffinityMask;
+</span></span><span style="display:flex;"><span>    CCHAR NumberOfProcessors;
+</span></span><span style="display:flex;"><span>} SYSTEM_BASIC_INFORMATION, <span style="color:#f92672">*</span> PSYSTEM_BASIC_INFORMATION;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#a6e22e">NTSTATUS</span> (NTAPI <span style="color:#f92672">*</span>PNtQuerySystemInformation)(
+</span></span><span style="display:flex;"><span>    _In_ SYSTEM_INFORMATION_CLASS SystemInformationClass,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">_Out_writes_bytes_opt_</span>(SystemInformationLength) PVOID SystemInformation,
+</span></span><span style="display:flex;"><span>    _In_ ULONG SystemInformationLength,
+</span></span><span style="display:flex;"><span>    _Out_opt_ PULONG ReturnLength);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    PNtQuerySystemInformation NtQuerySystemInformation <span style="color:#f92672">=</span> (PNtQuerySystemInformation)<span style="color:#a6e22e">GetProcAddress</span>(<span style="color:#a6e22e">GetModuleHandle</span>(<span style="color:#e6db74">L</span><span style="color:#e6db74">&#34;ntdll&#34;</span>), <span style="color:#e6db74">&#34;NtQuerySystemInformation&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    SYSTEM_BASIC_INFORMATION sysInfo;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">NtQuerySystemInformation</span>(SystemBasicInformation, <span style="color:#f92672">&amp;</span>sysInfo, <span style="color:#66d9ef">sizeof</span>(sysInfo), nullptr);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Processors: %u</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (ULONG)sysInfo.NumberOfProcessors);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="segundo-método-ntdlllib">Segundo Método: ntdll.lib</h2>
+<p>Como qualquer outra biblioteca, podemos adicionar um arquivo &ldquo;.lib&rdquo; para que o linker saiba aonde essa função está sendo implementada.
+Aqui alguns links aonde você pode baixar essa <em>ntdll.lib</em>:</p>
+<ol>
+<li><a href="https://github.com/Fyyre/ntdll">Fyyre/ntdll: ntdll.h - compatible with MSVC 6.0, Intel C++ Compiler and MinGW. Serves as a complete replacement for Windows.h (github.com)</a></li>
+<li><a href="https://github.com/x64dbg/ScyllaHide/tree/master/3rdparty/ntdll">ScyllaHide/3rdparty/ntdll at master · x64dbg/ScyllaHide (github.com)</a></li>
+<li><a href="https://github.com/odzhan/injection/tree/master/ntlib">injection/ntlib at master · odzhan/injection (github.com)</a></li>
+</ol>
+<p>Note que você poderia contruir sua própria <em>ntdll.lib</em>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;Windows.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">enum</span> _SYSTEM_INFORMATION_CLASS {
+</span></span><span style="display:flex;"><span>    SystemBasicInformation,
+</span></span><span style="display:flex;"><span>} SYSTEM_INFORMATION_CLASS;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> _SYSTEM_BASIC_INFORMATION {
+</span></span><span style="display:flex;"><span>    ULONG Reserved;
+</span></span><span style="display:flex;"><span>    ULONG TimerResolution;
+</span></span><span style="display:flex;"><span>    ULONG PageSize;
+</span></span><span style="display:flex;"><span>    ULONG NumberOfPhysicalPages;
+</span></span><span style="display:flex;"><span>    ULONG LowestPhysicalPageNumber;
+</span></span><span style="display:flex;"><span>    ULONG HighestPhysicalPageNumber;
+</span></span><span style="display:flex;"><span>    ULONG AllocationGranularity;
+</span></span><span style="display:flex;"><span>    ULONG_PTR MinimumUserModeAddress;
+</span></span><span style="display:flex;"><span>    ULONG_PTR MaximumUserModeAddress;
+</span></span><span style="display:flex;"><span>    ULONG_PTR ActiveProcessorsAffinityMask;
+</span></span><span style="display:flex;"><span>    CCHAR NumberOfProcessors;
+</span></span><span style="display:flex;"><span>} SYSTEM_BASIC_INFORMATION, <span style="color:#f92672">*</span> PSYSTEM_BASIC_INFORMATION;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">extern</span> <span style="color:#e6db74">&#34;C&#34;</span> NTSTATUS NTAPI <span style="color:#a6e22e">NtQuerySystemInformation</span>(
+</span></span><span style="display:flex;"><span>    _In_ SYSTEM_INFORMATION_CLASS SystemInformationClass,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">_Out_writes_bytes_opt_</span>(SystemInformationLength) PVOID SystemInformation,
+</span></span><span style="display:flex;"><span>    _In_ ULONG SystemInformationLength,
+</span></span><span style="display:flex;"><span>    _Out_opt_ PULONG ReturnLength);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#pragma comment(lib, &#34;ntdll&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    SYSTEM_BASIC_INFORMATION sysInfo;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">NtQuerySystemInformation</span>(SystemBasicInformation, <span style="color:#f92672">&amp;</span>sysInfo, <span style="color:#66d9ef">sizeof</span>(sysInfo), nullptr);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Processors: %u</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (ULONG)sysInfo.NumberOfProcessors);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="eliminando-o-windowsh">Eliminando o Windows.h</h1>
+<p>Perceba que estamos incluindo o &ldquo;Windows.h&rdquo; pois ele oferece definições e macros úteis como ULONG, NTSTATUS&hellip; Entretanto, a maioria das funções e objetos nativos não estão expostas pela Microsoft. Para isso, podemos utilizar o repositório <a href="https://github.com/winsiderss/phnt">winsiderss/phnt: Native API header files for the System Informer project. (github.com)</a>. Dessa forma, quase todas as definições que usaremos já estarão definidas nesses dois headers:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;phnt_windows.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;phnt.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#pragma comment(lib, &#34;ntdll&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    SYSTEM_BASIC_INFORMATION sysInfo;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">NtQuerySystemInformation</span>(SystemBasicInformation, <span style="color:#f92672">&amp;</span>sysInfo, <span style="color:#66d9ef">sizeof</span>(sysInfo), nullptr);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Processors: %u</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (ULONG)sysInfo.NumberOfProcessors);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="eliminando-outras-dependências">Eliminando outras dependências</h2>
+<p>Note, entretanto, que nosso binário ainda está utilizando funções não nativas. Para construirmos um binário que importa apenas a <em>ntdll.dll</em>, temos que dizer ao Visual Studio para remover todas as outras dependencias padrões.</p>
+<p><img src="images/Pasted_image_20231203191210.png" alt="centralized"></p>
+<p>O significado de cada flag está no canto inferior de cada imagem.</p>
+<p><img src="images/Pasted_image_20231203191930.png" alt="centralized"></p>
+<p><img src="images/Pasted_image_20231203192000.png" alt="centralized"></p>
+<p><img src="images/Pasted_image_20231203192042.png" alt="centralized"></p>
+<p><img src="images/Pasted_image_20231203192904.png" alt="centralized"></p>
+<p><img src="images/Pasted_image_20231203192117.png" alt="centralized"></p>
+<p>Por conta disso, não temos mais a função <em>main</em>, pois ela é chamada pela biblioteca CRT (C Runtime). Perceba, também, que não temos mais a função printf implementada pela CRT. Apesar de a <em>ntdll.dll</em> também definir a função printf, não vamos usa-lá agora.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;phnt_windows.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;phnt.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#pragma comment(lib, &#34;ntdll&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>NTSTATUS <span style="color:#a6e22e">NtProcessStartup</span>(PPEB _peb) {
+</span></span><span style="display:flex;"><span>    SYSTEM_BASIC_INFORMATION sysInfo;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">NtQuerySystemInformation</span>(SystemBasicInformation, <span style="color:#f92672">&amp;</span>sysInfo, <span style="color:#66d9ef">sizeof</span>(sysInfo), nullptr);
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> STATUS_SUCCESS;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Finalmente, temos um binário nativo. Entretanto, não conseguimos executa-lo por meios normais.</p>
+<p><img src="images/Pasted_image_20231203193158.png" alt="centralized"></p>
+<h1 id="execução">Execução</h1>
+<p>Binários nativos não podem ser executados utilizando funções &ldquo;normais&rdquo;, como CreateProcess. Existem duas formas para executar uma aplicação nativa.</p>
+<h2 id="bootexecute">BootExecute</h2>
+<p>Esse método consiste em adicionar o binário no diretório <em>System32</em> e alterar um registro para indicar que esse binário deve ser carregado quando o sistema iniciar.</p>
+<pre tabindex="0"><code>Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager
+</code></pre><p>Nesse caminho é necessário adicionar mais um campo no registro BootExecute. Além disso, coloque o binário na pasta <em>System32</em>. Dessa forma, nossa aplicação será carregada e executado quando o SO estiver inicializando.</p>
+<p><img src="images/Pasted_image_20231205091138.png" alt="centralized"></p>
+<h2 id="rtlcreateuserprocess">RtlCreateUserProcess</h2>
+<p>Uma outra forma de executar uma aplicação nativa é utilizando funções nativas para criar o processo. Dessa forma, podemos criar um programa que vai executar nossos binários nativos.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span><span style="color:#75715e">// RunNative
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;phnt_windows.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;phnt.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#pragma comment(lib, &#34;ntdll&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">wmain</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">wchar_t</span><span style="color:#f92672">*</span> argv[]) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    UNICODE_STRING name;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">RtlInitUnicodeString</span>(<span style="color:#f92672">&amp;</span>name, argv[<span style="color:#ae81ff">1</span>]);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    PRTL_USER_PROCESS_PARAMETERS params;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">auto</span> status <span style="color:#f92672">=</span> <span style="color:#a6e22e">RtlCreateProcessParameters</span>(<span style="color:#f92672">&amp;</span>params, <span style="color:#f92672">&amp;</span>name, nullptr, NULL, nullptr,
+</span></span><span style="display:flex;"><span>        nullptr, nullptr, nullptr, nullptr, nullptr);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">NT_SUCCESS</span>(status))
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    RTL_USER_PROCESS_INFORMATION info;
+</span></span><span style="display:flex;"><span>    status <span style="color:#f92672">=</span> <span style="color:#a6e22e">RtlCreateUserProcess</span>(<span style="color:#f92672">&amp;</span>name, <span style="color:#ae81ff">0</span>, params, nullptr, nullptr, nullptr, <span style="color:#ae81ff">0</span>, nullptr, nullptr, <span style="color:#f92672">&amp;</span>info);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">NT_SUCCESS</span>(status))
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">RtlDestroyProcessParameters</span>(params);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">ResumeThread</span>(info.ThreadHandle);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">CloseHandle</span>(info.ThreadHandle);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">CloseHandle</span>(info.ProcessHandle);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Powershell" data-lang="Powershell"><span style="display:flex;"><span>RunNative.exe <span style="color:#e6db74">&#34;\??\C:\Users\IEUser\Desktop\Native.exe&#34;</span>
+</span></span></code></pre></div><p>Perceba que é necessário utilizar <code>\??\</code>.</p>
+<h1 id="conclusão">Conclusão</h1>
+<p>Com isso, temos um ambiente que podemos executar um binário nativo. Entretanto, ainda não programamos nada de interessante. Vamos fazer isso no próximo artigo.</p>
+</div>
+				
+				<footer class="entry__footer">
+					
+<div class="entry__tags">
+			<a class="entry__tag btn" href="/tags/native-dll/">native-dll</a>
+			<a class="entry__tag btn" href="/tags/dev/">dev</a>
+</div>
+					
+				</footer>
+				
+			</article>
+		</div>
+	</main>
+	
+	
+
+
+
+	
+
+	</div>
+	<footer class="footer">
+	<div class="footer__copyright">© 2023 RSI. <span class="footer__copyright-credits">Powered by <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/vimux/binario" rel="nofollow noopener" target="_blank">Binario</a> theme.</span></div>
+</footer>
+<script src="/js/menu.js"></script>
+</body>
+</html>
