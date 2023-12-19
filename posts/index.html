@@ -63,6 +63,15 @@
 			
 				<div class="card card--2col">
 					<article class="entry card__box block">
+	<h1 class="entry__title title-excerpt"><a class="entry__title-link" href="/blog/posts/printf/">Escrevendo Aplicações Nativas para Windows - Parte 2</a></h1>
+	<div class="entry__content">Por Davi Chaves
+Até o momento, temos uma aplicação nativa, mas não conseguimos printar nada. Uma forma de construirmos essa funcionalidade seria fazer nosso processo native escrever no standard output do processo pai. Entretanto, eu acabei encontrando algumas dificuldades nessa solução. Dessa forma, vamos utilizar uma outra alternativa: criar um arquivo output.txt e escrever todos as saidas do nosso programa nele.
+Criando e Escrevendo em um Arquivo Para isso, vamos ter que utilizar duas APIs: NtCreateFile e NtWriteFile.</div>
+</article>
+				</div>
+			
+				<div class="card card--2col">
+					<article class="entry card__box block">
 	<h1 class="entry__title title-excerpt"><a class="entry__title-link" href="/blog/posts/construindo-ambiente/">Escrevendo Aplicações Nativas para Windows - Parte 1</a></h1>
 	<div class="entry__content">Por Davi Chaves
 O objetivo desse artigo é montarmos um binário que dependa exclusivamente da ntdll.dll. Abaixo estão algumas funções exportadas por essa biblioteca.
