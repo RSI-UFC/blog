@@ -13,7 +13,7 @@
       <link>https://www.rsiproject.org/blog/posts/frida/</link>
       <pubDate>Wed, 20 Dec 2023 09:03:20 -0800</pubDate>
       <guid>https://www.rsiproject.org/blog/posts/frida/</guid>
-      <description>Por Ramon Martins&#xA;Frida - Flutter &amp;amp; Kotlin - Parte 1 Essa série de artigos é sobre métodos de análise estática e dinâmica em aplicativos criados pelo framework Flutter, utilizando as linguagens Dart e Kotlin para construir aplicações para dispositivos móveis, com o sistema operacional Android.&#xA;Criando aplicação Flutter Foi criado uma aplicação em Flutter, utilizando a linguagem Dart e Kotlin chamando funções nativas de uma lib criada em c.</description>
+      <description>Por Ramon Martins&#xA;Frida - Flutter &amp;amp; Kotlin - Parte 1 Essa série de artigos é sobre métodos de análise estática e dinâmica em aplicativos criados pelo framework Flutter, utilizando as linguagens Dart e Kotlin para construir aplicações para dispositivos móveis, com o sistema operacional Android.&#xA;Aplicação Flutter Foi criado uma aplicação em Flutter, utilizando a linguagem Dart e Kotlin chamando funções nativas de uma lib criada em c.</description>
     </item>
   </channel>
 </rss>
