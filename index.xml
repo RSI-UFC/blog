@@ -6,8 +6,15 @@
     <description>Recent content on RSI</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>pt-br</language>
-    <lastBuildDate>Mon, 18 Dec 2023 09:03:20 -0800</lastBuildDate>
+    <lastBuildDate>Wed, 20 Dec 2023 09:03:20 -0800</lastBuildDate>
     <atom:link href="https://www.rsiproject.org/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Aplicações em Flutter</title>
+      <link>https://www.rsiproject.org/blog/posts/frida/</link>
+      <pubDate>Wed, 20 Dec 2023 09:03:20 -0800</pubDate>
+      <guid>https://www.rsiproject.org/blog/posts/frida/</guid>
+      <description>Por Ramon Martins&#xA;Frida - Flutter &amp;amp; Kotlin - Parte 1 Essa série de artigos é sobre métodos de análise estática e dinâmica em aplicativos criados pelo framework Flutter, utilizando as linguagens Dart e Kotlin para construir aplicações para dispositivos móveis, com o sistema operacional Android.&#xA;Criando aplicação Flutter Foi criado uma aplicação em Flutter, utilizando a linguagem Dart e Kotlin chamando funções nativas de uma lib criada em c.</description>
+    </item>
     <item>
       <title>Escrevendo Aplicações Nativas para Windows - Parte 2</title>
       <link>https://www.rsiproject.org/blog/posts/printf/</link>
@@ -27,7 +34,7 @@
       <link>https://www.rsiproject.org/blog/authors/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://www.rsiproject.org/blog/authors/</guid>
-      <description>Autores e mantenedores do blog Ramon Martins - (Bolsista Voluntário)&#xA;Linkedin&#xA;Área de atuação: CloudSec, Pentest em Mobile: iOS, Android&#xA;Pesquisador de segurança da informação, fundador do projeto RSI Universidade Federal do Ceará.&#xA;Mateus Santos - (Bolsista Voluntário)&#xA;Linkedin&#xA;Área de atuação: Engenharia Reversa/Análise de Malware&#xA;Pesquisador de ameaças, mantenedor do blog e membro do RSI desde 2018.&#xA;Davi Chaves - (Bolsista Voluntário)&#xA;Linkedin&#xA;Área de atuação: Engenharia Reversa/Windows Internals/Malware</description>
+      <description>Autores e mantenedores do blog Ramon Martins - (Bolsista Voluntário)&#xA;Linkedin&#xA;OSEP&#xA;Hall Of Fame - PortSwigger&#xA;Área de atuação: CloudSec, Pentest Mobile: iOS, Android&#xA;Pesquisador de segurança da informação, fundador do projeto RSI Universidade Federal do Ceará.&#xA;Mateus Santos - (Bolsista Voluntário)&#xA;Linkedin&#xA;Área de atuação: Engenharia Reversa/Análise de Malware&#xA;Pesquisador de ameaças, mantenedor do blog e membro do RSI desde 2018.&#xA;Davi Chaves - (Bolsista Voluntário)&#xA;Linkedin&#xA;Área de atuação: Engenharia Reversa/Windows Internals/Malware</description>
     </item>
   </channel>
 </rss>
