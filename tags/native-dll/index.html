@@ -63,6 +63,15 @@
 			
 				<div class="card card--2col">
 					<article class="entry card__box block">
+	<h1 class="entry__title title-excerpt"><a class="entry__title-link" href="/blog/posts/enumhandlers/">Escrevendo Aplicações Nativas para Windows - Parte 3</a></h1>
+	<div class="entry__content">Por Davi Chaves
+O objetivo desse artigo vai ser enumerar todos os processos e, em seguida enumerar todos as threads e handles de um processo específico.
+NtQuerySystemInformation Essa função será usada para pegarmos quase todo tipo de informação do sistema. O primeiro parametro dela é um valor de um enum SYSTEM_INFORMATION_CLASS que vai definir que tipo de informação ela vai trazer. Abaixo a estrutura desse enum. Primeiramente, estaremos utilizando o valor SystemProcessInformation para obtermos uma lista de todos os processos.</div>
+</article>
+				</div>
+			
+				<div class="card card--2col">
+					<article class="entry card__box block">
 	<h1 class="entry__title title-excerpt"><a class="entry__title-link" href="/blog/posts/printf/">Escrevendo Aplicações Nativas para Windows - Parte 2</a></h1>
 	<div class="entry__content">Por Davi Chaves
 Até o momento, temos uma aplicação nativa, mas não conseguimos printar nada. Uma forma de construirmos essa funcionalidade seria fazer nosso processo native escrever no standard output do processo pai. Entretanto, eu acabei encontrando algumas dificuldades nessa solução. Dessa forma, vamos utilizar uma outra alternativa: criar um arquivo output.txt e escrever todos as saidas do nosso programa nele.
