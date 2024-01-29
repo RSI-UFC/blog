@@ -60,21 +60,31 @@
 				<div class="entry__content"><blockquote>
 <p><em>Por Davi Chaves</em></p>
 </blockquote>
-<p><strong>Table of Contents</strong></p>
+<h1 id="table-of-contents">Table of Contents</h1>
 <ol>
-<li>[[#Campo Logsource|Campo Logsource]]</li>
-<li>[[#Campo Detection|Campo Detection]]
+<li><a href="#sigma-rules---parte-01---introduction">SIGMA Rules - Parte 01 - Introduction</a></li>
+<li><a href="#tipos-de-regras-sigma">Tipos de regras SIGMA</a></li>
+<li><a href="#funcionamento">Funcionamento</a></li>
+<li><a href="#escrevendo-uma-sigma-rule">Escrevendo uma SIGMA Rule</a>
 <ol>
-<li>[[#Campo Detection#Selection|Selection]]</li>
-<li>[[#Campo Detection#Condition|Condition]]</li>
-<li>[[#Campo Detection#Image, CommandLine&hellip; what are they?|Image, CommandLine&hellip; what are they?]]</li>
-<li>[[#Campo Detection#Modificadores|Modificadores]]</li>
+<li><a href="#campo-logsource">Campo Logsource</a></li>
+<li><a href="#campo-detection">Campo Detection</a>
+<ol>
+<li><a href="#selection">Selection</a></li>
+<li><a href="#condition">Condition</a></li>
+<li><a href="#image-commandline-what-are-they">Image, CommandLine&hellip; what are they?</a></li>
+<li><a href="#modificadores">Modificadores</a></li>
 </ol>
 </li>
 </ol>
-<p>![[Pasted image 20240109134022.png]]
+</li>
+<li><a href="#exemplo-de-sigma-rule-real">Exemplo de SIGMA Rule real</a></li>
+<li><a href="#conclus%C3%A3o">Conclusão</a></li>
+<li><a href="#reference">Reference</a>
+<img src="images/Pasted%20image%2020240109134022.png" alt="">
 Anteriormente, as detecções no âmbito do SIEM eram isoladas em compartimentos específicos vinculados a fornecedores ou plataformas particulares. Parceiros que pretendiam compartilhar conteúdo de detecção muitas vezes enfrentavam o desafio de <strong>traduzir uma consulta de um fornecedor para outro</strong>. Essa abordagem revelou-se insustentável.
-Assim como YARA ou as regras do Snort, o SIGMA representa outra ferramenta voltada para o compartilhamento aberto de detecções, mas com foco no SIEM em vez de arquivos ou tráfego de rede. O SIGMA capacita defensores a compartilhar detecções (alertas, casos de uso) <strong>em uma linguagem comum</strong>.</p>
+Assim como YARA ou as regras do Snort, o SIGMA representa outra ferramenta voltada para o compartilhamento aberto de detecções, mas com foco no SIEM em vez de arquivos ou tráfego de rede. O SIGMA capacita defensores a compartilhar detecções (alertas, casos de uso) <strong>em uma linguagem comum</strong>.</li>
+</ol>
 <h1 id="tipos-de-regras-sigma">Tipos de regras SIGMA</h1>
 <p>Existem atualmente dois tipos básicos de regras no SIGMA que podem ser expressos:</p>
 <ol>
@@ -88,7 +98,7 @@ Assim como YARA ou as regras do Snort, o SIGMA representa outra ferramenta volta
 <li><strong>Backend Transformation:</strong> em seguida, algum backend, como o pySigma-backend-splunk, vai ser responsável por colocar a SIGMA rule no formato de query apropriado. <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></li>
 <li><strong>Pipelines:</strong> por último, é possivel utilizar pipelines para mapear os campos genéricos escritos por outros autores de SIGMA rules para os campos específicos do seu ambiente desejado.
 O ponto importante aqui é entender que, dado uma mesma SIGMA rule, é possível transforma-lá em diferentes detecções de diferentes SIEMs. Nesse artigo, apenas a escrita das regras SIGMA serão abordadas.
-![[out 2.svg]]</li>
+<img src="images/out%202.svg" alt=""></li>
 </ol>
 <h1 id="escrevendo-uma-sigma-rule">Escrevendo uma SIGMA Rule</h1>
 <p>Vamos escrever uma regra extremamente simples que detecte execuções do binário <code>CertUtil.exe</code> que contenham na <code>CommandLine</code> flags como <code>-encode</code> ou <code>/encode</code>.
@@ -388,9 +398,9 @@ Abaixo, os atuais modificadores suportados pelo SIGMA. Vale a pena lembrar que, 
 				<footer class="entry__footer">
 					
 <div class="entry__tags">
-			<a class="entry__tag btn" href="/blog/tags/native-dll/">native-dll</a>
+			<a class="entry__tag btn" href="/blog/tags/sigma/">sigma</a>
 			<a class="entry__tag btn" href="/blog/tags/dev/">dev</a>
-			<a class="entry__tag btn" href="/blog/tags/loadlibrary/">loadlibrary</a>
+			<a class="entry__tag btn" href="/blog/tags/rules/">Rules</a>
 </div>
 					
 				</footer>

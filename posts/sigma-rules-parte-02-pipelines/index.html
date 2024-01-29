@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html class="no-js" lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#1b1b1b">
+	<title>SIGMA Rules Pipelines - Parte 02 | RSI</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="stylesheet" href="/blog/css/bundle.css">
+	<link rel="icon" href="/blog/icons/16.png" sizes="16x16" type="image/png">
+	<link rel="icon" href="/blog/icons/32.png" sizes="32x32" type="image/png">
+		
+</head>
+<body class="body kind-page">
+	<header class="header">
+	<a class="logo" href="/blog">RSI</a>
+	
+<nav class="main-nav" role="navigation">
+	<button id="toggle" class="main-nav__btn" aria-label="Menu toggle" aria-expanded="false" tabindex="0">
+		<div class="main-nav__btn-box" tabindex="-1">
+			<svg class="main-nav__icon icon-menu" width="18" height="18" viewBox="0 0 18 18">
+				<path class="icon-menu__burger" d="M18 0v3.6H0V0h18zM0 10.8h18V7.2H0v3.6zM0 18h18v-3.6H0V18z"/>
+				<path class="icon-menu__x" d="M11.55 9L18 15.45 15.45 18 9 11.55 2.55 18 0 15.45 6.45 9 0 2.55 2.55 0 9 6.45 15.45 0 18 2.55 11.55 9z"/>
+			</svg>
+		</div>
+	</button>
+	<ul id="menu" class="main-nav__list">
+			<li class="main-nav__item">
+				<a class="main-nav__link" href="/blog/authors/">
+					
+					<span class="main-nav__text">Autores</span>
+					
+				</a>
+			</li>
+			<li class="main-nav__item">
+				<a class="main-nav__link" href="/blog/tags/">
+					
+					<span class="main-nav__text">Tags</span>
+					
+				</a>
+			</li>
+			<li class="main-nav__item main-nav__item--active">
+				
+					
+					<span class="main-nav__text">Posts</span>
+					
+				
+			</li>
+	</ul>
+</nav>
+</header>
+	<div class="primary">
+	
+	<main class="main">
+		
+		<div class="single block">
+			<article class="entry">
+				<h1 class="entry__title">SIGMA Rules Pipelines - Parte 02</h1>
+				<div class="entry__content"><blockquote>
+<p><em>Por Davi Chaves</em></p>
+</blockquote>
+<h1 id="table-of-contents">Table of Contents</h1>
+<ol>
+<li><a href="#sigma-rules---parte-02---pipelines">SIGMA Rules - Parte 02 - Pipelines</a></li>
+<li><a href="#objetivo">Objetivo</a>
+<ol>
+<li><a href="#exemplo-thomas-patzke">Exemplo Thomas Patzke</a></li>
+</ol>
+</li>
+<li><a href="#the-field-naming-problem">The Field Naming Problem</a></li>
+<li><a href="#pipelines-what-are-they">Pipelines, what are they?</a></li>
+<li><a href="#specification-of-pipelines">Specification of Pipelines</a></li>
+<li><a href="#specification-of-transformations">Specification of Transformations</a>
+1. <a href="#field_name_mapping">field_name_mapping</a>
+1. <a href="#add_condition">add_condition</a></li>
+<li><a href="#specification-of-conditions">Specification of Conditions</a>
+<ol>
+<li><a href="#ruleprocessingcondition">RuleProcessingCondition</a>
+<ol>
+<li><a href="#exemplo-logsourcecondition">Exemplo: LogsourceCondition</a></li>
+</ol>
+</li>
+<li><a href="#detectionitemprocessingcondition">DetectionItemProcessingCondition</a></li>
+<li><a href="#fieldnameprocessingcondition">FieldNameProcessingCondition</a>
+<ol>
+<li><a href="#exemplo-excludefieldcondition">Exemplo: ExcludeFieldCondition</a></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><a href="#mapping-process-creation-rules">Mapping Process Creation Rules</a>
+<ol>
+<li><a href="#for%C3%A7ar-um-mapeamento">Forçar um mapeamento</a></li>
+</ol>
+</li>
+</ol>
+<p>O principal objetivo das SIGMAS Rules é descrever assinaturas de logs de maneira genérica, independente de fornecedor e ambiente. Fontes genéricas de logs (logsources) são uma camada adicional de abstração entre a lógica de detecção e a fonte de logs, permitindo que o usuário de uma regra utilize o mesmo conjunto de regras de criação de processos para eventos do Sysmon, assim como para eventos gerados por uma solução de Detecção e Resposta de Endpoint (EDR).</p>
+<p>No entanto, as regras Sigma precisam, em última instância, se transformar em consultas específicas para o SIEM, EDR ou qualquer outra ferramenta utilizada para esse fim, levando em consideração suas convenções exclusivas de nomenclatura de campos e outros requisitos específicos. A abordagem do pySigma (e, portanto, também do Sigma CLI) para fazer isso são os pipelines de processamento. Muitos backends já incluem um ou vários pipelines, sendo que alguns são aplicados automaticamente pelo backend, como é o caso dos backends do QRadar e InsightIDR, devido a esses sistemas possuírem uma taxonomia fixa. Outros backends, como Elasticsearch e Splunk, exigem o uso explícito de pipelines de processamento, pois há muitas maneiras de inserir dados nessas plataformas.</p>
+<h1 id="objetivo">Objetivo</h1>
+<p>Voltanto para nosso exemplo do artigo anterior, temos uma SIGMA rule que, se não for aplicada nenhuma pipeline, é gerado uma query com fields genéricos, que podem, ou não, serém os mesmos fields que o SIEM da sua companhia.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yml" data-lang="yml"><span style="display:flex;"><span><span style="color:#f92672">logsource</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">product</span>: <span style="color:#ae81ff">windows</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">detection</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">selection</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">Image|endswith</span>: <span style="color:#e6db74">&#39;\certutil.exe&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">CommandLine|contains</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#39;-encode&#39;</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#e6db74">&#39;/encode&#39;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">condition</span>: <span style="color:#ae81ff">selection</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>										 <span style="color:#ae81ff">|</span>
+</span></span><span style="display:flex;"><span>										 <span style="color:#ae81ff">| Sem pipeline</span>
+</span></span><span style="display:flex;"><span>										 <span style="color:#ae81ff">V</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">Image=&#34;*\\certutil.exe&#34; CommandLine IN (&#34;*-encode*&#34;, &#34;*/encode*&#34;)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>										 <span style="color:#ae81ff">|</span>
+</span></span><span style="display:flex;"><span>										 <span style="color:#ae81ff">| Com uma pipeline</span>
+</span></span><span style="display:flex;"><span>										 <span style="color:#ae81ff">V</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">index=&#34;company-windows&#34; EventCode=4688 NewProcessName=&#34;*\\certutil.exe&#34; CommandLine IN (&#34;*-encode*&#34;, &#34;*/encode*&#34;)</span>
+</span></span></code></pre></div><p>No exemplo acima, poderiamos utilizar uma pipeline para mapear o campo genérico <code>Image</code> para <code>NewProcessName</code>. Além disso, baseado no logsource (<code>product: windows</code>) podemos adicionar o campo <code>index=&quot;company-windows&quot;</code> para focar a busca em apenas logs do ambiente Windows. Note que, caso sua empresa tivesse, por exemplo, vários indexes de logs windows, como &ldquo;company-windows, windows-logs, windows-something&rdquo;, você poderia utilizar a pipeline da mesma forma para adicionar todos esses indexes na query final.</p>
+<h2 id="exemplo-thomas-patzke">Exemplo Thomas Patzke</h2>
+<p>Abaixo, um exemplo retirado do blog do Thomas Patzke:
+<img src="images/Pasted%20image%2020240111074618.png" alt="">
+Na priveira conversão, não é utilizado nenhuma pipeline. Por conta disso, veja que o resultado contem campos bem genéricos. Na segunda conversão, a pipeline <code>splunk</code> é utilizada. Essa pipeline é bem genérica, ela apenas vai mapear os logsources da regras SIGMA em EventIds do Sysmon. No caso dessa regra em específico, se trata da categoria de &ldquo;criação de processos&rdquo;. Portanto, essa pipeline genérica apenas fez o mapeamento <code>windows &amp; process_creation --&gt; EventID=1</code>. Na terceira conversão, temos uma pipeline específica do ambiente SIEM dele. Ou seja, no ambiente splunk dele, os logs Windows estão armazenados no <code>index=&quot;windows&quot;</code>, o field <code>Image</code> se chama <code>win.Image</code> e, ao invés do field padrão <code>EventID</code>, foi utilizado dois fields com sintaxe ligeiramente diferente: <code>event_id</code> e <code>evtid</code>.
+O importante é entender que pipelines, além de fazerem mapeamentos, são como um funil: vão transformar regras genéricas em coisas mais específicas. <strong>Nesse artigo, vamos primeiramente nos focar em regras mais específicas, como a terceira conversão do Patzke.</strong></p>
+<h1 id="the-field-naming-problem">The Field Naming Problem</h1>
+<p>No pior dos casos, caso cada regra SIGMA utilizasse campos totalmente diferentes uns dos outros, precisariamos de uma pipeline para cada regra! Isso tiraria um grande poder das SIGMA rules.</p>
+<p><img src="images/out%203.svg" alt="">
+Entretanto, como os autores das SIGMAs rules seguem uma certa convensão de campos, uma única pipeline pode, muitas vezes, ser aplicada para várias regras.
+<img src="images/out%204.svg" alt="">
+Como exemplo prático, o repositório oficial de <a href="https://github.com/SigmaHQ/sigma/tree/24b9ed72c173c81b483699bad2730748fdc312e1/rules/windows/process_creation">SIGMA</a> rules possui milhares de regras da categoria <code>process_creation</code>. Dessa forma, com uma única pipeline, poderíamos utilizar todas essas regras.</p>
+<h1 id="pipelines-what-are-they">Pipelines, what are they?</h1>
+<p>Um pipeline de processamento define uma sequência de transformações aplicadas a uma regra Sigma antes de convertê-la na linguagem de consulta alvo. Essas transformações incluem mapeamentos de campos, adição de sufixos aos nomes dos campos e muito mais.</p>
+<p>Os pipelines podem ser representados tanto como arquivos <strong>YAML</strong>, destinados a usuários finais criando pipelines específicos para o ambiente das regras Sigma, quanto como código <strong>Python</strong>. Este último é o método preferido para implementar pipelines específicos para o backend e oferece algumas vantagens. Nesse artigo, vamos nós focar em pipelines no formato YAML.</p>
+<p>Os itens de processamento dentro de um pipeline são executados na ordem definida pela prioridade. Uma cadeia típica de processamento envolve:</p>
+<ol>
+<li>Traduzir fontes genéricas de logs em fontes específicas, como converter regras Sigma de criação de processos em Sysmon EventID 1.</li>
+<li>Transformar assinaturas de logs na taxonomia usada pelo backend.</li>
+<li>Aplicar transformações específicas do ambiente.</li>
+</ol>
+<p>Os pipelines podem ser encadeados com base em sua prioridade, criando um fluxo contínuo de transformações para as regras Sigma.</p>
+<h1 id="specification-of-pipelines">Specification of Pipelines</h1>
+<p>Uma pipeline, também chamada de <code>ProcessingPipeline</code>,  pode conter uma variedade de campos responsáveis por fazerem diversos processamentos nas regras SIGMA. Abaixo, um exemplo de pipeline contendo alguns desses campos. Apesar disso, nesse artigo iremos apenas tratar das &ldquo;transformations&rdquo;.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># Exemplo de pipeline retirado do repositório pySigma</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">name</span>: <span style="color:#ae81ff">Test</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">priority</span>: <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">allowed_backends</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">test-a</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">test-b</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">transformations</span>: <span style="color:#75715e"># Vamos abordar apenas esse campo</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">id</span>: <span style="color:#ae81ff">test</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">field_name_mapping</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">EventID</span>: <span style="color:#ae81ff">EventCode</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">rule_conditions</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">type</span>: <span style="color:#e6db74">&#34;true&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">dummy</span>: <span style="color:#ae81ff">test-true</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">type</span>: <span style="color:#e6db74">&#34;false&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">dummy</span>: <span style="color:#ae81ff">test-false</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">rule_cond_op</span>: <span style="color:#ae81ff">or</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">detection_item_conditions</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">type</span>: <span style="color:#e6db74">&#34;true&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">dummy</span>: <span style="color:#ae81ff">test-true</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">type</span>: <span style="color:#e6db74">&#34;false&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">dummy</span>: <span style="color:#ae81ff">test-false</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">detection_item_cond_op</span>: <span style="color:#ae81ff">or</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">postprocessing</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">id</span>: <span style="color:#ae81ff">test</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">type</span>: <span style="color:#ae81ff">embed</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">prefix</span>: <span style="color:#e6db74">&#34;[ &#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">suffix</span>: <span style="color:#e6db74">&#34; ]&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">rule_conditions</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">type</span>: <span style="color:#e6db74">&#34;true&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">dummy</span>: <span style="color:#ae81ff">test-true</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">type</span>: <span style="color:#e6db74">&#34;false&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">dummy</span>: <span style="color:#ae81ff">test-false</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">rule_cond_op</span>: <span style="color:#ae81ff">or</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">finalizers</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">type</span>: <span style="color:#ae81ff">concat</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">prefix</span>: <span style="color:#e6db74">&#34;(&#39;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">separator</span>: <span style="color:#e6db74">&#34;&#39;, &#39;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">suffix</span>: <span style="color:#e6db74">&#34;&#39;)&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">vars</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">test_string</span>: <span style="color:#ae81ff">abc</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">test_number</span>: <span style="color:#ae81ff">123</span>
+</span></span></code></pre></div><h1 id="specification-of-transformations">Specification of Transformations</h1>
+<p>O campo &ldquo;transformations&rdquo; de pipelines no formato YAML contém uma ou mais <code>ProcessingItem</code>.<br>
+Um <code>ProcessingItem</code> é composto por uma <code>ProcessingCondition</code>^[<code>ProcessingCondition</code> não tem relação com o campo &ldquo;condition&rdquo; de uma regra SIGMA] opcional e uma <code>Transformation</code>^[Perceba que o campo &ldquo;transformations&rdquo; de pipelines no formato YAML não contem uma lista de <code>Transformation</code>, mas sim uma lista de <code>ProcessingItem</code>] que é aplicada no caso de a condição ser avaliada como verdadeira em relação à regra SIGMA fornecida ou se a condição não estiver presente. Como exemplo, antes mesmo de entendermos o que cada campo significa, abaixo está uma pipeline contendo três <code>ProcessingItem</code>, com cada um contendo uma <code>Transformation</code>, e duas <code>ProcessingCondition</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">name</span>: <span style="color:#ae81ff">My cool pipeline</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">transformations</span>:
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ProcessingItem 1</span>
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">id</span>: <span style="color:#ae81ff">cool_id_1</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Transformation 1</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">type</span>: <span style="color:#ae81ff">field_name_mapping</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">mapping</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">EventID</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ae81ff">event_id</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ProcessingItem 2</span>
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">id</span>: <span style="color:#ae81ff">cool_id_2</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Transformation 2</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">type</span>: <span style="color:#ae81ff">field_name_prefix</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">prefix</span>: <span style="color:#e6db74">&#34;win.&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># ProcessingCondition 2</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">field_name_conditions</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">type</span>: <span style="color:#ae81ff">include_fields</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">fields</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">Image  </span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ProcessingItem 3</span>
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">id</span>: <span style="color:#ae81ff">cool_id_3</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Transformation 3</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">type</span>: <span style="color:#ae81ff">add_condition</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">conditions</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">index</span>: <span style="color:#ae81ff">windows</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># ProcessingCondition 3</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">rule_conditions</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">type</span>: <span style="color:#ae81ff">logsource</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">product</span>: <span style="color:#ae81ff">windows</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Note: no &#34;ProcessingItem 3&#34;, apesar dos campos &#34;conditions:&#34; e &#34;rule_conditions&#34; possuirem o mesmo termo &#34;conditions&#34;, eles são coisas completamente diferentes. O primeiro é um campo do &#34;Transformation 3&#34;, já o segundo é o campo &#34;rule_conditions&#34; do &#34;ProcessingItem 3&#34;.</span>
+</span></span></code></pre></div><p>Abaixo, uma tabela retirado da <a href="https://sigmahq-pysigma.readthedocs.io/en/latest/Processing_Pipelines.html#transformations">documentação oficial contendo todos os tipos de transformações atualmente suportadas</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Parameters</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>field_name_mapping</td>
+<td><code>mapping</code></td>
+<td>Map a field name to one or multiple different.</td>
+</tr>
+<tr>
+<td>field_name_prefix_mapping</td>
+<td><code>mapping</code></td>
+<td>Map a field name prefix to one or multiple different prefixes.</td>
+</tr>
+<tr>
+<td>field_name_suffix</td>
+<td><code>suffix</code></td>
+<td>Add field name suffix.</td>
+</tr>
+<tr>
+<td>field_name_prefix</td>
+<td><code>prefix</code></td>
+<td>Add field name prefix.</td>
+</tr>
+<tr>
+<td>drop_detection_item</td>
+<td></td>
+<td>Deletes detection items. This should only used in combination with a detection item condition.</td>
+</tr>
+<tr>
+<td>wildcard_placeholders</td>
+<td><code>include</code>, <code>exclude</code></td>
+<td>Replaces placeholders with wildcards. This transformation is useful if remaining placeholders should be replaced with something meaningful to make conversion of rules possible without defining the placeholders content.</td>
+</tr>
+<tr>
+<td>value_placeholders</td>
+<td><code>include</code>, <code>exclude</code></td>
+<td>Replaces placeholders with values contained in variables defined in the configuration.</td>
+</tr>
+<tr>
+<td>query_expression_placeholders</td>
+<td><code>include</code>, <code>exclude</code>, <code>expression</code>, <code>mapping</code></td>
+<td>Replaces a placeholder with a plain query containing the placeholder or an identifier mapped from the placeholder name. The main purpose is the generation of arbitrary list lookup expressions which are passed to the resulting query.</td>
+</tr>
+<tr>
+<td>add_condition</td>
+<td><code>conditions</code>, <code>name</code>, <code>template</code></td>
+<td>Add a condition expression to rule conditions.</td>
+</tr>
+<tr>
+<td>change_logsource</td>
+<td><code>category</code>, <code>product</code>, <code>service</code></td>
+<td>Replace log source as defined in transformation parameters.</td>
+</tr>
+<tr>
+<td>replace_string</td>
+<td><code>regex</code>, <code>replacement</code></td>
+<td>Replace string part matched by regular expresssion with replacement string that can reference capture groups. It operates on the plain string representation of the SigmaString value.</td>
+</tr>
+<tr>
+<td>map_string</td>
+<td><code>mapping</code></td>
+<td>Map static string value to one or multiple other strings.</td>
+</tr>
+<tr>
+<td>set_state</td>
+<td><code>key</code>, <code>val</code></td>
+<td>Set pipeline state key to value.</td>
+</tr>
+<tr>
+<td>rule_failure</td>
+<td><code>message</code></td>
+<td>Raise a SigmaTransformationError with the provided message. This enables transformation pipelines to signalize that a certain situation can’t be handled, e.g. only a subset of values is allowed because the target data model doesn’t offers all possibilities.</td>
+</tr>
+<tr>
+<td>detection_item_failure</td>
+<td><code>message</code></td>
+<td>Raise a SigmaTransformationError with the provided message. This enables transformation pipelines to signalize that a certain situation can’t be handled, e.g. only a subset of values is allowed because the target data model doesn’t offers all possibilities.</td>
+</tr>
+<tr>
+<td>Por enquanto, vamos deixar o tema de <code>ProcessingCondition</code> de lado para entendermos as  <code>Transformation</code>. Como mostrado acima, existem muitas transformações possíveis. Diante disso, não irei explicar cada uma delas, irei apenas dar uma intuição sobre o porquê de usar transformações</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="field_name_mapping">field_name_mapping</h3>
+<p>Suponha que em nossos logs de criação de processo o campo contendo o nome do processo não fosso <code>Image</code>. Dessa forma, fazer um simples mapeamento do campo <code>Image</code> para <code>NewProcessName</code>, por exemplo, já seria o suficiente. Estamos assumindo, por simplicidade, que essa pipeline só seria aplicada por nós em logs de criação de processos, pois, caso ela fosse aplicada em qualquer outro log que também contesse o campo <code>Image</code>, o mapeamento também seria feito. Veremos mais a frente como utilizar &ldquo;condições&rdquo; para garantir que essa transformação só seja aplicada em casos específicos.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">transformations</span>:
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ProcessingItem</span>
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">id</span>: <span style="color:#ae81ff">some_cool_id</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Transformation</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">type</span>: <span style="color:#ae81ff">field_name_mapping</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">mapping</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">Image</span>: <span style="color:#ae81ff">NewProcessName</span>
+</span></span></code></pre></div><h3 id="add_condition">add_condition</h3>
+<p>Suponha, agora, que queiramos procurar por logs apénas com o <code>index: company-windows</code> e com o <code>EventCode: 4688</code>. Para isso, vamos utilizar a <code>Transformation</code> &ldquo;add_condition&rdquo; para adicionar um novo campo.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">transformations</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ae81ff">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ProcessingItem</span>
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">id</span>: <span style="color:#ae81ff">some_cool_id2</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Transformation</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">type</span>: <span style="color:#ae81ff">add_condition</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">conditions</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">index</span>: <span style="color:#ae81ff">company-windows</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">EventCode</span>: <span style="color:#ae81ff">4688</span>
+</span></span></code></pre></div><p>É importante notar que, adicionar os campos <code>index: company-windows</code> e <code>EventCode: 4688</code> para todos os logs, provavelmente, não é uma boa ideia. O ideal seria adicionar esse campo apenas quando a regra SIGMA conter o logsource <code>index: windows</code>, <code>category: processes_creation</code> e <code>service: windows_audit</code>. Veremos como alcançar isso usando as <code>ProcessingCondition</code> mais a diante.</p>
+<h1 id="specification-of-conditions">Specification of Conditions</h1>
+<p>As <code>ProcessingCondition</code> de um <code>ProcessingItem</code> servem apenas para uma coisa: dizer se a <code>Transformation</code> será aplicada ou não. Além disso, é importante frisar que qualquer <code>ProcessingCondition</code> pode ser utilizada para qualquer ProcessingItem. Diante disso, é obvio a importância de condições, pois vão surgir situações nas quais queremos aplicar certas trasnformações apenas sob certas condições.</p>
+<p>Existem três grupos de <code>ProcessingCondition</code>:</p>
+<ol>
+<li><code>RuleProcessingCondition</code></li>
+<li><code>DetectionItemProcessingCondition</code></li>
+<li><code>FieldNameProcessingCondition</code>
+Todas as três são <code>ProcessingCondition</code>, mas possuem algumas pequenas diferenças. É importante que fique avisado que eu não compreendi totalmente logo de início o motivo dessa divisão, então não fique surpreso se você também achar um pouco desnecessário esses três agrupamentos.</li>
+</ol>
+<h2 id="ruleprocessingcondition">RuleProcessingCondition</h2>
+<p>Atualmente, existem cinco condições nesse grupo, <strong>estas são avaliadas para a regra SIGMA como um todo</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Parameters</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>logsource</td>
+<td><code>category</code>, <code>product</code>, <code>service</code></td>
+<td>Matches log source on rule. Not specified log source fields are ignored.</td>
+</tr>
+<tr>
+<td>contains_detection_item</td>
+<td><code>field</code>, <code>value</code></td>
+<td>Returns True if rule contains a detection item that matches the given field name and value.</td>
+</tr>
+<tr>
+<td>processing_item_applied</td>
+<td><code>processing_item_id</code></td>
+<td>Checks if processing item was applied to rule.</td>
+</tr>
+<tr>
+<td>is_sigma_rule</td>
+<td></td>
+<td>Checks if rule is a SigmaRule.</td>
+</tr>
+<tr>
+<td>processing_item_applied</td>
+<td></td>
+<td>Checks if rule is a SigmaCorrelationRule.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exemplo-logsourcecondition">Exemplo: LogsourceCondition</h3>
+<p>Como explicado no exemplo da transformação &ldquo;add_condition&rdquo;, só faz sentido adicionar o <code>index: company-windows</code> se a regra SIGMA conter no logsource <code>product: windows</code>. Portanto, podemos utilizar a <code>LogsourceCondition</code> para aplicar essa transformação apenas nesse caso específico.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">name</span>: <span style="color:#ae81ff">My cool pipeline</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">transformations</span>:
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ProcessingItem</span>
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">id</span>: <span style="color:#ae81ff">cool_id</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Transformation</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">type</span>: <span style="color:#ae81ff">add_condition</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">conditions</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">index</span>: <span style="color:#ae81ff">company-windows</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">rule_conditions</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># RuleProcessingCondition (LogsourceCondition)</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">type</span>: <span style="color:#ae81ff">logsource</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">product</span>: <span style="color:#ae81ff">windows</span>
+</span></span></code></pre></div><h2 id="detectionitemprocessingcondition">DetectionItemProcessingCondition</h2>
+<p>Atualmente, existem duas condições nesse grupo, estas são avaliadas para a regra SIGMA como um todo, estas são avaliadas para cada item de detecção de uma regra SIGMA.</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Parameters</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>match_string</td>
+<td><code>cond</code>, <code>pattern</code></td>
+<td>Match string <strong>values</strong> with a regular expression ‘pattern’. The parameter ‘cond’ determines for detection items with multiple values if any or all strings must match.</td>
+</tr>
+<tr>
+<td>processing_item_applied</td>
+<td><code>processing_item_id</code></td>
+<td>Checks if processing item was applied to detection item.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fieldnameprocessingcondition">FieldNameProcessingCondition</h2>
+<p>Atualmente, existem três condições nesse grupo, estas são avaliadas para nomes de campos em itens de detecção, campos da regra SIGMA ou em outros casos que é requerido fazer um &ldquo;matching&rdquo; em nomes de campos sem um contexto de um item de detecção.</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Parameters</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>include_fields</td>
+<td><code>fields</code>, <code>type</code></td>
+<td>Matches on field name if it is contained in fields list.</td>
+</tr>
+<tr>
+<td>exclude_fields</td>
+<td><code>fields</code>, <code>type</code></td>
+<td>Matches on field name if it is not contained in fields list.</td>
+</tr>
+<tr>
+<td>processing_item_applied</td>
+<td><code>processing_item_id</code></td>
+<td>Checks if processing item was applied to a field name.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exemplo-excludefieldcondition">Exemplo: ExcludeFieldCondition</h3>
+<p>Suponha que todos os campos dos logs que você deseja rodar as regras SIGMA possuem o prefíxo &ldquo;Process.&rdquo;, com a excessão do campo <code>Image</code>. Nesse caso, podemos utilizar essa condição para excluir os campos desejados e fazer com que a transformação seja aplicada apenas nos campos corretos.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">name</span>: <span style="color:#ae81ff">My cool pipeline</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">transformations</span>:
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ProcessingItem</span>
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">id</span>: <span style="color:#ae81ff">cool_id</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Transformation</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">type</span>: <span style="color:#ae81ff">field_name_prefix</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">prefix</span>: <span style="color:#e6db74">&#34;Process.&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">field_name_conditions</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># FieldNameProcessingCondition (ExcludeFieldCondition)</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">type</span>: <span style="color:#ae81ff">exclude_fields</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">fields</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ae81ff">Image</span>
+</span></span></code></pre></div></div>
+				
+				<footer class="entry__footer">
+					
+<div class="entry__tags">
+			<a class="entry__tag btn" href="/blog/tags/sigma/">sigma</a>
+			<a class="entry__tag btn" href="/blog/tags/dev/">dev</a>
+			<a class="entry__tag btn" href="/blog/tags/rules/">Rules</a>
+</div>
+					
+				</footer>
+				
+			</article>
+		</div>
+	</main>
+	
+	
+
+
+
+	
+
+	</div>
+	<footer class="footer">
+	<div class="footer__copyright">© 2024 RSI. <span class="footer__copyright-credits">Powered by <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/vimux/binario" rel="nofollow noopener" target="_blank">Binario</a> theme.</span></div>
+</footer>
+<script src="/blog/js/menu.js"></script>
+</body>
+</html>

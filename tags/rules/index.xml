@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Rules on RSI</title>
+    <link>https://www.rsiproject.org/blog/tags/rules/</link>
+    <description>Recent content in Rules on RSI</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>pt-br</language>
+    <lastBuildDate>Thu, 28 Dec 2023 09:03:20 -0800</lastBuildDate>
+    <atom:link href="https://www.rsiproject.org/blog/tags/rules/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SIGMA Rules Introduction - Parte 01</title>
+      <link>https://www.rsiproject.org/blog/posts/sigma-rules-parte-01-introduction/</link>
+      <pubDate>Thu, 28 Dec 2023 09:03:20 -0800</pubDate>
+      <guid>https://www.rsiproject.org/blog/posts/sigma-rules-parte-01-introduction/</guid>
+      <description>Por Davi Chaves&#xA;Table of Contents SIGMA Rules - Parte 01 - Introduction Tipos de regras SIGMA Funcionamento Escrevendo uma SIGMA Rule Campo Logsource Campo Detection Selection Condition Image, CommandLine&amp;hellip; what are they? Modificadores Exemplo de SIGMA Rule real Conclusão Reference Anteriormente, as detecções no âmbito do SIEM eram isoladas em compartimentos específicos vinculados a fornecedores ou plataformas particulares. Parceiros que pretendiam compartilhar conteúdo de detecção muitas vezes enfrentavam o desafio de traduzir uma consulta de um fornecedor para outro.</description>
+    </item>
+    <item>
+      <title>SIGMA Rules Pipelines - Parte 02</title>
+      <link>https://www.rsiproject.org/blog/posts/sigma-rules-parte-02-pipelines/</link>
+      <pubDate>Thu, 28 Dec 2023 09:03:20 -0800</pubDate>
+      <guid>https://www.rsiproject.org/blog/posts/sigma-rules-parte-02-pipelines/</guid>
+      <description>Por Davi Chaves&#xA;Table of Contents SIGMA Rules - Parte 02 - Pipelines Objetivo Exemplo Thomas Patzke The Field Naming Problem Pipelines, what are they? Specification of Pipelines Specification of Transformations 1. field_name_mapping 1. add_condition Specification of Conditions RuleProcessingCondition Exemplo: LogsourceCondition DetectionItemProcessingCondition FieldNameProcessingCondition Exemplo: ExcludeFieldCondition Mapping Process Creation Rules Forçar um mapeamento O principal objetivo das SIGMAS Rules é descrever assinaturas de logs de maneira genérica, independente de fornecedor e ambiente.</description>
+    </item>
+  </channel>
+</rss>
