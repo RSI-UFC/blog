@@ -58,6 +58,30 @@
 			<div class="cards">
 					<div class="card card--2col">
 					<article class="entry card__box block">
+	<h1 class="entry__title title-excerpt"><a class="entry__title-link" href="/blog/posts/parte-04-native-dll-injection-using-loadlibrary/">Native DLL Injection Using LoadLibrary - Parte 04</a></h1>
+	<div class="entry__content">Por Davi Chaves
+O processo de injeção nativa de uma dll em um processo é bastante semelhante ao método convencional utilizando as funções da kernel32.dll. A lógica é exatamente igual:
+NTSTATUS NtProcessStartup(PPEB peb) { // Abre o processo alvo NtOpenProcess(...); // Alocamos um pouco de memória no processo alvo NtAllocateVirtualMemory(...); // Escrevemos o nome da nossa dll na memória do processo alvo NtWriteVirtualMemory(...); // Pegamos o endereço da função LoadLibraryW LdrGetProcedureAddress(&#34;LoadLibraryW&#34;.</div>
+</article>
+					</div>
+					<div class="card card--2col">
+					<article class="entry card__box block">
+	<h1 class="entry__title title-excerpt"><a class="entry__title-link" href="/blog/posts/articles/">Segurança no Kubernetes</a></h1>
+	<div class="entry__content">Por Isaias do Carmo
+Introdução Kubernetes possui várias camadas de comunicação e prover segurança através de todas essas camadas pode se tornar uma tarefa árdua. Um dos desafios é o estabelecimento de um ambiente de isolamento no qual clusters, pods e namespaces possam se comunicar entre si, aplicando o conceitos como zero trust e defesa em profundidade.
+Este artigo explora a implementação de Network Policies no Kubernetes, concentrando-se nas melhores práticas através de cenários práticos.</div>
+</article>
+					</div>
+					<div class="card card--2col">
+					<article class="entry card__box block">
+	<h1 class="entry__title title-excerpt"><a class="entry__title-link" href="/blog/posts/sigma-rules-parte-01-introduction/">SIGMA Rules Introduction - Parte 01</a></h1>
+	<div class="entry__content">Por Davi Chaves
+Table of Contents
+[[#Campo Logsource|Campo Logsource]] [[#Campo Detection|Campo Detection]] [[#Campo Detection#Selection|Selection]] [[#Campo Detection#Condition|Condition]] [[#Campo Detection#Image, CommandLine&hellip; what are they?|Image, CommandLine&hellip; what are they?]] [[#Campo Detection#Modificadores|Modificadores]] ![[Pasted image 20240109134022.png]] Anteriormente, as detecções no âmbito do SIEM eram isoladas em compartimentos específicos vinculados a fornecedores ou plataformas particulares. Parceiros que pretendiam compartilhar conteúdo de detecção muitas vezes enfrentavam o desafio de traduzir uma consulta de um fornecedor para outro.</div>
+</article>
+					</div>
+					<div class="card card--2col">
+					<article class="entry card__box block">
 	<h1 class="entry__title title-excerpt"><a class="entry__title-link" href="/blog/posts/enumhandlers/">Escrevendo Aplicações Nativas para Windows - Parte 3</a></h1>
 	<div class="entry__content">Por Davi Chaves
 O objetivo desse artigo vai ser enumerar todos os processos e, em seguida enumerar todos as threads e handles de um processo específico.
@@ -95,7 +119,7 @@ Primeiro Método: Dynamic Linking Como toda função exportada, podemos utilizar
 
 	</div>
 	<footer class="footer">
-	<div class="footer__copyright">© 2023 RSI. <span class="footer__copyright-credits">Powered by <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/vimux/binario" rel="nofollow noopener" target="_blank">Binario</a> theme.</span></div>
+	<div class="footer__copyright">© 2024 RSI. <span class="footer__copyright-credits">Powered by <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/vimux/binario" rel="nofollow noopener" target="_blank">Binario</a> theme.</span></div>
 </footer>
 <script src="/blog/js/menu.js"></script>
 </body>

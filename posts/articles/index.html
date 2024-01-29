@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html class="no-js" lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#1b1b1b">
+	<title>Segurança no Kubernetes | RSI</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="stylesheet" href="/blog/css/bundle.css">
+	<link rel="icon" href="/blog/icons/16.png" sizes="16x16" type="image/png">
+	<link rel="icon" href="/blog/icons/32.png" sizes="32x32" type="image/png">
+		
+</head>
+<body class="body kind-page">
+	<header class="header">
+	<a class="logo" href="/blog">RSI</a>
+	
+<nav class="main-nav" role="navigation">
+	<button id="toggle" class="main-nav__btn" aria-label="Menu toggle" aria-expanded="false" tabindex="0">
+		<div class="main-nav__btn-box" tabindex="-1">
+			<svg class="main-nav__icon icon-menu" width="18" height="18" viewBox="0 0 18 18">
+				<path class="icon-menu__burger" d="M18 0v3.6H0V0h18zM0 10.8h18V7.2H0v3.6zM0 18h18v-3.6H0V18z"/>
+				<path class="icon-menu__x" d="M11.55 9L18 15.45 15.45 18 9 11.55 2.55 18 0 15.45 6.45 9 0 2.55 2.55 0 9 6.45 15.45 0 18 2.55 11.55 9z"/>
+			</svg>
+		</div>
+	</button>
+	<ul id="menu" class="main-nav__list">
+			<li class="main-nav__item">
+				<a class="main-nav__link" href="/blog/authors/">
+					
+					<span class="main-nav__text">Autores</span>
+					
+				</a>
+			</li>
+			<li class="main-nav__item">
+				<a class="main-nav__link" href="/blog/tags/">
+					
+					<span class="main-nav__text">Tags</span>
+					
+				</a>
+			</li>
+			<li class="main-nav__item main-nav__item--active">
+				
+					
+					<span class="main-nav__text">Posts</span>
+					
+				
+			</li>
+	</ul>
+</nav>
+</header>
+	<div class="primary">
+	
+	<main class="main">
+		
+		<div class="single block">
+			<article class="entry">
+				<h1 class="entry__title">Segurança no Kubernetes</h1>
+				<div class="entry__content"><blockquote>
+<p><em>Por Isaias do Carmo</em></p>
+</blockquote>
+<h1 id="introdução">Introdução</h1>
+<p>Kubernetes possui várias camadas de comunicação e prover segurança através de todas essas camadas pode se tornar uma tarefa árdua. Um dos desafios é o estabelecimento de um ambiente de isolamento no qual clusters, pods e namespaces possam se comunicar entre si, aplicando o conceitos como zero trust e defesa em profundidade.</p>
+<p>Este artigo explora a implementação de Network Policies no Kubernetes, concentrando-se nas melhores práticas através de cenários práticos.</p>
+<h1 id="objetivos">Objetivos</h1>
+<ul>
+<li>Entender os fundamento de Redes no Kubernetes</li>
+<li>Entender o conceito de Network policies</li>
+<li>Criar um cluster Kubernetes</li>
+<li>Implementar Network Policies</li>
+<li>Gerenciar Policies</li>
+</ul>
+<h1 id="pré-requisitos">Pré-requisitos:</h1>
+<ul>
+<li><input disabled="" type="checkbox"> Ter Docker instalado na sua máquina</li>
+<li><input disabled="" type="checkbox"> ter o <a href="https://k3d.io/">K3D</a> instalado  para criar seu cluster</li>
+<li><input disabled="" type="checkbox"> Ter o <a href="https://kubernetes.io/docs/tasks/tools/">kubectl</a> instalado</li>
+<li><input disabled="" type="checkbox"> Noções de <a href="https://kubernetes.io/">Kubernetes</a></li>
+</ul>
+<h1 id="criando-seu-cluster-kubernetes">Criando seu Cluster Kubernetes</h1>
+<p>Vamos usar para este artigo o <a href="https://k3d.io/">K3D</a> para criar nosso cluster, um projeto mantido pela Rancher, que possibilita criar cluster Kubernetes com docker. Se preferir, use os provedores de cloud para criar seus cluster. AWS, Azure, GCP oferecem créditos para que você possa começar a usar seus serviços.</p>
+<ul>
+<li><a href="https://aws.amazon.com/pt/free/">https://aws.amazon.com/pt/free/</a></li>
+<li><a href="https://azure.microsoft.com/pt-br/free/">https://azure.microsoft.com/pt-br/free/</a></li>
+<li><a href="https://cloud.google.com/free">https://cloud.google.com/free</a></li>
+</ul>
+<p>Para criar um cluster utilizando o k3d acesse o terminal de seu sistema operacional e digite:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>k3d cluster create my-cluster
+</span></span></code></pre></div><p>![[cluster-create.png]]
+Valide as informações do seu cluster
+![[cluster-infor.png]]</p>
+<blockquote>
+<p>o K3D oferece vários recursos para montar seu cluster local, como bind de portas, quantidades de nodes, gerenciamento de memória, etc. Visite a documentação para mais informações.</p>
+</blockquote>
+<p>Agora que temos nosso cluster pronto, podemos seguir para a próxima etapa.</p>
+<h1 id="fundamentos">Fundamentos</h1>
+<p>Vamos passar um overview do modelo de rede no Kubernetes.</p>
+<ul>
+<li>Todo pod &ldquo;ganha&rdquo; seu próprio endereço IP em um cluster</li>
+<li>Por padrão, os pods enxergam e podem se comunicar com todos os outros Pods dentro de um cluster. Guarde essa informação!</li>
+<li>Containers dentro de um mesmo POD (não é uma boa prática, então evite isso OK?) compartilham o endereço IP do pod.</li>
+</ul>
+<p>Vamos ver como isso funciona na prática:</p>
+<h4 id="criando-deployments">Criando deployments</h4>
+<p>Vamos começar criando alguns deployments para aprofundar para validar essas premissas.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl create deployment app01 --image<span style="color:#f92672">=</span>nginx:latest
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl create deployment app02 --image<span style="color:#f92672">=</span>httpd:latest
+</span></span></code></pre></div><p>![[create-deploys01.png]]</p>
+<h4 id="validando-os-conceitos-de-rede">Validando os conceitos de rede</h4>
+<p>Vamos checar primeira premissa olhando o conteúdo de /etc/hosts:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl exec -it &lt;POD_NAME&gt; -- cat /etc/hosts
+</span></span></code></pre></div><p>![[ip-pods.png]]</p>
+<p>Bem, agora vamos tentar chegar na aplicação do apache a partir do nginx:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl exec -it app01-5669cbdb44-rqrks -- /bin/bash
+</span></span></code></pre></div><p>![[teste-network01.png]]</p>
+<p>Dessa forma, vemos na prática as premissas. A terceira parece um pouco óbvia, mas fique a vontade para testa-la. Instale fermentas de rede e brinque um pouco para ver na prática a comunicação de rede do kubernetes.</p>
+<blockquote>
+<p>Será que essas regras valem para pods que estão em namespaces diferentes?</p>
+</blockquote>
+<h1 id="problemas-de-segurança">Problemas de Segurança</h1>
+<p>O k8s é muito útil em aplicações em arquitetura de &ldquo;microserviços&rdquo;.  É um sistema de orquestração de contêineres perfeito para automatizar o gerenciamento, o dimensionamento e a implantação de aplicativos de &ldquo;microsserviços&rdquo;. No entanto nem todas as aplicações em um cluster precisam e deve se comunicar, correto?</p>
+<p>É muito comum que organizações usem um mesmo cluster Kubernetes para implantar todas as suas diversas aplicações de negócios, todas se comunicando por default. Do contexto de segurança, isso é similar a uma rede inteira de uma empresa que se comunica, não tendo segregação e trazendo diversos problemas de segurança.</p>
+<p>No k8s não é diferente, é importante pensar em segmentação de rede, aplicação de conceitos de zero trust e defesa em profundidade. Felizmente temos um poderoso recurso no K8S que nos auxilia no contexto de políticas e segregação de redes.</p>
+<h1 id="network-policies">Network Policies</h1>
+<p>Network Policies são um conjunto de regras que definem como a comunicação entre pods dentro de um cluster Kubernetes é permitida ou negada. É um recurso poderoso que permite controlar o tráfego de rede que entra e sai dos pods. Basicamente, atuam como um firewall virtuais que definem que tráfego pode chegar as aplicações fornecendo um nível granular de controle sobre a comunicação de rede do seu aplicativo.</p>
+<p>NetworkPolicies são definidos usando regras PolicyTypes, PodSelectors, Ingress e Egress:</p>
+<ul>
+<li><strong>PolicyTypes:</strong> Determina se a política será aplicada para tráfego de  Ingress (Entrada) ou Engress (saída), ou ambos.</li>
+<li><strong>PodSelectors:</strong> Define o conjuto de pods que serão aplicados pela políticas. Use labels para espeficiar quais pods serão afetados pela política</li>
+<li><strong>Ingress Rules:</strong> Define qual tráfego de rede de entrada tem permissão para chegar aos pods selecionados.</li>
+<li><strong>Egress rules:</strong> Defiine qual tráfego de rede de saída é permitido nos pods selecionados.</li>
+</ul>
+<h1 id="criando-e-aplicando-network-policies">Criando e aplicando Network Policies</h1>
+<p>É importante seguir uma pratica recomendada de mercado e criar uma policy que nega todo o tráfego. Isso estabelece uma linha de base segura a partir da qual podemos permitir seletivamente o tráfego necessário</p>
+<ul>
+<li>Criamos um arquivo chamado <code>default-deny-all.yaml</code></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">NetworkPolicy</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">default-deny-all</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">podSelector</span>: {}
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">policyTypes</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">Ingress</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">Egress</span>
+</span></span></code></pre></div><p>Agora aplicamos essa policy:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl apply -f default-deny-all.yaml
+</span></span></code></pre></div><p>![[default-policy001.png]]</p>
+<p>Entre na aplicação do nginx (app01) e use  o curl para chegar ao google ou até mesmo ao apache (app02).</p>
+<p>![[default-policy002.png]]</p>
+<p>Verá que toda comunicação de entrada ou saída do pod é dropada.</p>
+<h3 id="cenário">Cenário</h3>
+<p>Vamos pensar no seguinte arquitetura de aplicação:</p>
+<p>![[cenario01.png]]</p>
+<center >aa</center>
+Vemos que todos os serviços estão se comunicando por padrão ao serem implantados. Dessa forma, todos os pods se comunicam. Isso pode não ser interassante do ponto de vista de segurança porque a exploração da aplicação do front-end dá acesso diretamente ao banco de dados.
+<h3 id="remediações">Remediações</h3>
+<p>Vamos pensar no seguinte fluxo de cominação entre as aplicações:</p>
+<p>![[cenario02.png]]</p>
+<p>Para mitigar esses riscos, usamos network policies para isolar os pods. Usando uma abordagem apropriada podemos isolar o front-end, o back-end e o banco de dados de diminuído a superfície de ataque. Como resultado, se de alguma forma algum invasor obtiver acesso à camada frontend, não poderá acessar diretamente a camada do banco de dados.
+Isso parece mais organizado e trás um melhor controle do ponto de vista de segurança.</p>
+<p>Vamos usar o Network Policies para validar isso na prática.</p>
+<h3 id="criando-as-aplicações">Criando as aplicações</h3>
+<p>Remova as politicas aplicadas anteriormente, vamos deixar o cluster default.</p>
+<p>![[cluster-default001.png]]</p>
+<p>Crie um arquivo chamado <code>script.sh</code> e cole o código abaixo. Ele criará as aplicações nos seus namespaces. Vamos usar uma imagem simples do nginx e apenas modificar os nomes para fins de entendimento.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#!/bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Lista de namespaces e seus respectivos labels</span>
+</span></span><span style="display:flex;"><span>declare -A namespaces<span style="color:#f92672">=(</span> <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;frontend&#34;</span><span style="color:#f92672">]=</span><span style="color:#e6db74">&#34;frontend&#34;</span> <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;backend&#34;</span><span style="color:#f92672">]=</span><span style="color:#e6db74">&#34;backend&#34;</span> <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;database&#34;</span><span style="color:#f92672">]=</span><span style="color:#e6db74">&#34;database&#34;</span> <span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Percorrer a lista de namespaces e criar/rotular</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> ns in <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>!namespaces[@]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>; <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>    echo <span style="color:#e6db74">&#34;Criando namespace: </span>$ns<span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>    kubectl create ns $ns
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    echo <span style="color:#e6db74">&#34;aplicando label nos namespace:&#34;</span>
+</span></span><span style="display:flex;"><span>    kubectl label ns $ns role<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>namespaces[$ns]<span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Verifica se o namespace é &#39;frontend&#39; para setar mais uma réplica</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$ns<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;frontend&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>        echo <span style="color:#e6db74">&#34;Criando deployment para </span>$ns<span style="color:#e6db74"> com duas réplicas&#34;</span>
+</span></span><span style="display:flex;"><span>        kubectl create deploy $ns -n $ns --image<span style="color:#f92672">=</span>nginx --replicas<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>        echo <span style="color:#e6db74">&#34;Criando deployment para </span>$ns<span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>        kubectl create deploy $ns -n $ns --image<span style="color:#f92672">=</span>nginx
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">done</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>chmod +x scritp.sh
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./scritp.sh
+</span></span></code></pre></div><p>![[script-deploy.png]]</p>
+<p>![[status-aplicacoes.png]]</p>
+<h3 id="aplicando-network-policies">Aplicando Network Policies</h3>
+<h4 id="camada-do-frontend">Camada do frontend</h4>
+<p>Vamos começar criando uma política para negar todo o tráfego. Crie um arquivo <code>default-deny-all-frontend.yaml</code> e cole a política:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">NetworkPolicy</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">default-deny-all-frontend</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">frontend</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">podSelector</span>: {}
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">policyTypes</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">Ingress</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">Egress</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl apply -f default-deny-all-frontend.yaml
+</span></span></code></pre></div><p>Dessa forma a camada do frontend fica isolada dos outros namespaces no cluster. Experimente testar as comunicações agora.</p>
+<p>Pela imagem, devemos agora permitir que o frontend consiga se comunicar com a camada do backend, com um tráfego da saída. Então, crie um arquivo chamado <code>allow-egress-frontend-to-backend.yaml</code> como a seguinte política:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">NetworkPolicy</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">allow-egress-frontend-to-backend</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">frontend</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">podSelector</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">matchLabels</span>: {}
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">egress</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">to</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">podSelector</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">matchLabels</span>: {}
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">namespaceSelector</span>:
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">matchLabels</span>:
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">role</span>: <span style="color:#ae81ff">backend</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl apply -f allow-egress-frontend-to-backend.yaml
+</span></span></code></pre></div><p>Teste com o <code>curl</code> a comunicação do frontend para o backend para validar se os serviços conseguem se comunicar.</p>
+<p>Como negamos o trafego de entrada e saída, precisamos liberar para que o trafego da internet chegue ao serviço do frontend. Se você estiver usando um serviço do tipo Loadbalancer conseguirá testar isso na prática.
+Crie um yaml chamado <code>allow-ingress-internet-to-frontend.yaml</code> com a seguinte política:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">NetworkPolicy</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">allow-ingress-internet-to-frontend</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">frontend</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">podSelector</span>:             
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">matchLabels</span>: {}
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ingress</span>:                   
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">from</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">ipBlock</span>:           
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">0.0.0.0</span><span style="color:#ae81ff">/0 </span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl apply -f allow-ingress-internet-to-frontend.yaml
+</span></span></code></pre></div><p>Aqui temos um problema clássico de políticas. Essa política está permitindo todo o trafego de entrada para o frontend, sobrescrevendo outras politicas. Dessa forma, se tentar chegar no frontend a partir do database, verá que é possível. Vamos corrigir isso usando o parametro <code>execpt</code>. Além disso vamos restringir também ao tráfego HTTP. Modifique o arquivo <code>allow-ingress-internet-to-frontend.yaml</code> para o seguinte:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">NetworkPolicy</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">allow-ingress-internet-to-frontend</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">frontend</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">podSelector</span>:             
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">matchLabels</span>: {}
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ingress</span>:                   
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">from</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">ipBlock</span>:           
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">cidr</span>: <span style="color:#ae81ff">0.0.0.0</span><span style="color:#ae81ff">/0 </span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">except</span>:             
+</span></span><span style="display:flex;"><span>           - <span style="color:#ae81ff">10.0.0.0</span><span style="color:#ae81ff">/8 </span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">ports</span>:                
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">TCP</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">port</span>: <span style="color:#ae81ff">80</span> 
+</span></span></code></pre></div><p>Agora estamos evitando que pods de outros namespaces não consigam enviar tráfego de entrada usando o CIDR da rede do kuberntes.</p>
+<h4 id="camada-do-backend">Camada do backend</h4>
+<p>Seguindo o exemplo do frontend, vamos definir uma política para para isolar o backend de outros namespaces. Crie um yaml chamado <code>default-deny-all-backend.yaml</code> com a seguinte política:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">NetworkPolicy</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">default-deny-all-backend</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">backend</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">podSelector</span>: {}
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">policyTypes</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">Ingress</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">Egress</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl apply -f default-deny-all-backend.yaml
+</span></span></code></pre></div><p>Precisamos permitir o tráfego de saida para o database. crie um arquivo chamado <code>allow-egress-backend-to-database.yaml</code> com a seguinte política:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">NetworkPolicy</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">allow-egress-backend-to-database</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">backend</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">podSelector</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">matchLabels</span>: {}
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">egress</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">to</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">podSelector</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">matchLabels</span>: {}
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">namespaceSelector</span>:
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">matchLabels</span>:
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">role</span>: <span style="color:#ae81ff">database</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl apply -f allow-egress-backend-to-database.yaml
+</span></span></code></pre></div><p>Após concluído a etapa acima, vamos permitir o tráfego de entrada apartir do front-end. Crie um arquivo chamado <code>allow-ingress-frontend-to-backend.yaml</code> com a seguinte política:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">NetworkPolicy</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">allow-ingress-frontend-to-backend</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">backend</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">podSelector</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">matchLabels</span>: {}
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ingress</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">from</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">podSelector</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">matchLabels</span>: {}
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">namespaceSelector</span>:
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">matchLabels</span>:
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">role</span>: <span style="color:#ae81ff">frontend</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl apply -f allow-ingress-frontend-to-backend.yaml
+</span></span></code></pre></div><p>Dessa forma, o back-end irá permitir tráfego de entrada a partir do front-end e tráfego de saída para o database.</p>
+<h4 id="camada-do-banco-de-dados">Camada do Banco de dados</h4>
+<p>Por fim, vamos definir o tráfego que irá fluir pelo nosso database. O banco deverá poder receber tráfego da camada do backend, mas não da camanda do front-end.</p>
+<p>Primeiro definimos nossa política padrão de negar todo tráfego. Configure um arquivo chamado <code>default-deny-all-database.yaml</code> com a policy abaixo:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">NetworkPolicy</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">default-deny-all-database</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">database</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">podSelector</span>: {}
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">policyTypes</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">Ingress</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">Egress</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl apply -f default-deny-all-database.yaml
+</span></span></code></pre></div><p>Vamos permitir o tráfego de entrada do nosso backend. Crie um yaml <code>allow-ingress-backend-to-database.yaml</code> com a política a baixo:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">NetworkPolicy</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">allow-ingress-backend-to-database</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">database</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">podSelector</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">matchLabels</span>: {}
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ingress</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">from</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">podSelector</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">matchLabels</span>: {}
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">namespaceSelector</span>:
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">matchLabels</span>:
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">role</span>: <span style="color:#ae81ff">backend</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl apply -f allow-ingress-backend-to-database.yaml
+</span></span></code></pre></div><p>Após aplicado as políticas, teste as comunicações entre os serviços para validar a sua eficiência. Deverá ter a seguinte arquitetura:</p>
+<ul>
+<li><input disabled="" type="checkbox"> frontend se comunica somente com backend</li>
+<li><input disabled="" type="checkbox"> backend se comunica com o frontend e com database</li>
+<li><input disabled="" type="checkbox"> database se comunica apenas como backend</li>
+</ul>
+<p>![[cenario03.png]]</p>
+<p>Vale ressaltar que em uma arquitetura real você definirá também as portas e protocolos para um controle mais eficaz. Ao usar <a href="https://kubernetes.io/docs/concepts/services-networking/service/">services</a> é importante liberar os tráfegos para que os serviços de comunicação do kuberntes como kube-dns and kube-proxy, consigam fazer resolução de nome.</p>
+<h1 id="melhores-práticas">Melhores Práticas</h1>
+<ul>
+<li>Inicie com uma abordagem &ldquo;Denny-all&rdquo;. Isso dará um ambiente com estado limpo, permitindo que você gerencie as comunicações necessárias progressivamente</li>
+<li>Pense em Labels. O uso correto e organizado de labels, permitirá que você direcione o trafego nos pods com precisão, concedendo acesso apenas quando necessário</li>
+<li>Vale reforçar o uso de least privilege e zero trust. Isso dará mais segurança ao diminuir a superfície de ataque e melhorar a governança do seu ambiente.</li>
+<li></li>
+</ul>
+<p>Este artigo explora a aplicação prática de políticas de rede para reforçar a segurança em ambientes com cluster kubernetes. É muito importante o uso de conceitos de defesa em profundidade para dificultar um processo de ataque na sua empresa.</p>
+<p>No artigo subsequente, exploraremos o uso do RBAC (Controle de Acesso Baseado em Função), um elemento chave do Kubernetes, que desempenha um papel significativo no processo de zerto trust, fortalecendo a segurança de gerenciamento de acessos.</p>
+</div>
+				
+				<footer class="entry__footer">
+					
+<div class="entry__tags">
+			<a class="entry__tag btn" href="/blog/tags/cloud/">cloud</a>
+			<a class="entry__tag btn" href="/blog/tags/sec/">sec</a>
+			<a class="entry__tag btn" href="/blog/tags/cloudsec/">cloudsec</a>
+			<a class="entry__tag btn" href="/blog/tags/devsecops/">devsecops</a>
+			<a class="entry__tag btn" href="/blog/tags/dev/">dev</a>
+</div>
+					
+				</footer>
+				
+			</article>
+		</div>
+	</main>
+	
+	
+
+
+
+	
+
+	</div>
+	<footer class="footer">
+	<div class="footer__copyright">© 2024 RSI. <span class="footer__copyright-credits">Powered by <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/vimux/binario" rel="nofollow noopener" target="_blank">Binario</a> theme.</span></div>
+</footer>
+<script src="/blog/js/menu.js"></script>
+</body>
+</html>

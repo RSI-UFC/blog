@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html class="no-js" lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#1b1b1b">
+	<title>Native DLL Injection Using LoadLibrary - Parte 04 | RSI</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="stylesheet" href="/blog/css/bundle.css">
+	<link rel="icon" href="/blog/icons/16.png" sizes="16x16" type="image/png">
+	<link rel="icon" href="/blog/icons/32.png" sizes="32x32" type="image/png">
+		
+</head>
+<body class="body kind-page">
+	<header class="header">
+	<a class="logo" href="/blog">RSI</a>
+	
+<nav class="main-nav" role="navigation">
+	<button id="toggle" class="main-nav__btn" aria-label="Menu toggle" aria-expanded="false" tabindex="0">
+		<div class="main-nav__btn-box" tabindex="-1">
+			<svg class="main-nav__icon icon-menu" width="18" height="18" viewBox="0 0 18 18">
+				<path class="icon-menu__burger" d="M18 0v3.6H0V0h18zM0 10.8h18V7.2H0v3.6zM0 18h18v-3.6H0V18z"/>
+				<path class="icon-menu__x" d="M11.55 9L18 15.45 15.45 18 9 11.55 2.55 18 0 15.45 6.45 9 0 2.55 2.55 0 9 6.45 15.45 0 18 2.55 11.55 9z"/>
+			</svg>
+		</div>
+	</button>
+	<ul id="menu" class="main-nav__list">
+			<li class="main-nav__item">
+				<a class="main-nav__link" href="/blog/authors/">
+					
+					<span class="main-nav__text">Autores</span>
+					
+				</a>
+			</li>
+			<li class="main-nav__item">
+				<a class="main-nav__link" href="/blog/tags/">
+					
+					<span class="main-nav__text">Tags</span>
+					
+				</a>
+			</li>
+			<li class="main-nav__item main-nav__item--active">
+				
+					
+					<span class="main-nav__text">Posts</span>
+					
+				
+			</li>
+	</ul>
+</nav>
+</header>
+	<div class="primary">
+	
+	<main class="main">
+		
+		<div class="single block">
+			<article class="entry">
+				<h1 class="entry__title">Native DLL Injection Using LoadLibrary - Parte 04</h1>
+				<div class="entry__content"><blockquote>
+<p><em>Por Davi Chaves</em></p>
+</blockquote>
+<p>O processo de injeção nativa de uma <em>dll</em> em um processo é bastante semelhante ao método convencional utilizando as funções da <em>kernel32.dll</em>. A lógica é exatamente igual:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span>NTSTATUS <span style="color:#a6e22e">NtProcessStartup</span>(PPEB peb) {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// Abre o processo alvo
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">NtOpenProcess</span>(...); 
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// Alocamos um pouco de memória no processo alvo
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">NtAllocateVirtualMemory</span>(...);
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// Escrevemos o nome da nossa dll na memória do processo alvo
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">NtWriteVirtualMemory</span>(...);
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// Pegamos o endereço da função LoadLibraryW
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">LdrGetProcedureAddress</span>(<span style="color:#e6db74">&#34;LoadLibraryW&#34;</span>...);
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// Criamos uma thread no exato endereço da função LoadLibraryW no processo alvo
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">RtlCreateUserThread</span>(...);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h1 id="ntopenprocess">NtOpenProcess</h1>
+<p>O primeiro passo é conseguirmos um <em>handle</em> do processo alvo com permições de leitura/escrita em relação a memória, permissão para realizar operações nesse processo (ex.: WriteProcessMemory, VirtualProtectEx) e permissão para criamos uma <em>thread</em> nesse processo.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span>HANDLE hTgtProc;
+</span></span><span style="display:flex;"><span>CLIENT_ID cid{ <span style="color:#a6e22e">ULongToHandle</span>(<span style="color:#ae81ff">1337</span>) };
+</span></span><span style="display:flex;"><span>OBJECT_ATTRIBUTES procAttr <span style="color:#f92672">=</span> <span style="color:#a6e22e">RTL_CONSTANT_OBJECT_ATTRIBUTES</span>(nullptr, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>NTSTATUS status <span style="color:#f92672">=</span> <span style="color:#a6e22e">NtOpenProcess</span>(<span style="color:#f92672">&amp;</span>hTgtProc, PROCESS_VM_WRITE <span style="color:#f92672">|</span> PROCESS_VM_OPERATION <span style="color:#f92672">|</span> PROCESS_CREATE_THREAD, <span style="color:#f92672">&amp;</span>procAttr, <span style="color:#f92672">&amp;</span>cid);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">NT_SUCCESS</span>(status)) <span style="color:#75715e">// error
+</span></span></span></code></pre></div><p>A função recebe como parâmetro o <em>handle</em> que será populado, o <em>acessmask</em> desejado, os atributos do processo (o mais básico possível, no nosso caso) e o <em>clientid</em>, que serve para identificar o nosso processo. Além disso, usarei um <em>pid hardcoded</em> por simplicidade, mas o ideal seria passar isso como argumento por <em>command line</em>, por exemplo.</p>
+<h1 id="ntallocatevirtualmemory">NtAllocateVirtualMemory</h1>
+<p>O proximo passo é alocarmos memória nesse processo alvo. É nesse espaço de memória que vamos escrever o caminho da nossa <em>dll</em>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span>PVOID pBuffer <span style="color:#f92672">=</span> nullptr;
+</span></span><span style="display:flex;"><span>SIZE_T size <span style="color:#f92672">=</span> <span style="color:#ae81ff">4096</span>;
+</span></span><span style="display:flex;"><span>status <span style="color:#f92672">=</span> <span style="color:#a6e22e">NtAllocateVirtualMemory</span>(hTgtProc, <span style="color:#f92672">&amp;</span>pBuffer, <span style="color:#ae81ff">0</span>, <span style="color:#f92672">&amp;</span>size, MEM_COMMIT <span style="color:#f92672">|</span> MEM_RESERVE, PAGE_READWRITE);
+</span></span></code></pre></div><p>Observe que a função vai nos dar o endereço de um <em>buffer</em> (<code>pBuffer</code>) contendo o endereço da memória alocado no processo alvo. É importante entender que esse endereço não está em nossa memória. Além disso, temos que passar o tamanho que queremos alocar. Como só é possível alocar <strong>páginas</strong> de memória (tamanho de 4096 bytes), qualquer valor maior que zero serviria, já que queremos apenas alocar o caminho de uma <em>dll</em>.
+![[Screen-Recording-<em>12-10-2023-11-47-29-AM</em>.gif]]
+Veja que no exato momento no qual chamamos a função <code>NtAllocateVirtualMemory</code> um segmento de memória de 0x1000 bytes é alocado no endereço <code>0x2713A9E0000</code>.</p>
+<h1 id="ntwritevirtualmemory">NtWriteVirtualMemory</h1>
+<p>Agora só precisamos escrever o caminho da <em>dll</em> que desejamos injetar na memória do processo alvo que acabamos de alocar.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span>WCHAR dllpath[] <span style="color:#f92672">=</span> <span style="color:#e6db74">L</span><span style="color:#e6db74">&#34;C:</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">Cool</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">dll</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">path.dll&#34;</span>;
+</span></span><span style="display:flex;"><span>status <span style="color:#f92672">=</span> <span style="color:#a6e22e">NtWriteVirtualMemory</span>(hTgtProc, pBuffer, dllpath, <span style="color:#66d9ef">sizeof</span>(WCHAR) <span style="color:#f92672">*</span> (<span style="color:#a6e22e">wcslen</span>(dllpath) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>), nullptr);
+</span></span></code></pre></div><p>![[Screen-Recording-<em>12-10-2023-12-03-35-PM</em>.gif]]
+Veja o exato momento no qual escrevemos o caminho da <em>dll</em> no endereço que acabamos de alocar na memória do processo alvo.</p>
+<h1 id="ldrgetdllhandle--ldrgetprocedureaddress">LdrGetDllHandle &amp; LdrGetProcedureAddress</h1>
+<p>Agora que temos o caminho da nossa <em>dll</em> que queremos executar no espaço de memória do processo alvo, só precisaríamos chamar de algum jeito a função <code>LoadLibraryW</code> no processo alvo (passando o endereço da string como parâmetro). Mas como vamos fazer isso? É importante notar que, como o nosso processo alvo (notepad, no meu caso) importa o <em>kernel32.dll</em>, a função <code>LoadLibraryW</code> está definida em algum lugar, só precisamos achar aonde. Mas como podemos fazer isso? Simples! Todas essas <em>dlls</em> do sistema são mapeadas no mesmo espaço de memória entre todos os processos. Portanto, se descobrirmos aonde está a função <code>LoadLibraryW</code> em um processo, vamos saber aonde ela está em todos os outros processos que importam essa biblioteca dinâmicamente.
+![[Pasted image 20231210122512.png]]
+Na imagem acima, temos três processos diferentes (<em>notepad</em>, <em>totalpe</em> e <em>x64dbg</em>) que importam o <em>kernel32.dll</em>. Perceba que ela mapeada no mesmo endereço de memória em todos os processos! Isso vale para as outras <em>dlls</em>, como a própria <em>ntdll.dll</em>. Agora precisamos do endereço da função <code>LoadLibraryW</code>. Se estivessemos em uma aplicação normal, utilizando a <em>kernel32.dll</em>, poderiamos alcançar isso apenas fazendo algo como <code>pvoid address = LoadLibraryW</code>! Entretando, como não temos essa <em>dll</em> na memória do nosso processo, teriamos que, de algum outro jeito, pegar o endereço dessa função. O código, caso fossemos utilizar essa estratégia, seria esse:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-C" data-lang="C"><span style="display:flex;"><span>UNICODE_STRING kernel32Name;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">RtlInitUnicodeString</span>(<span style="color:#f92672">&amp;</span>kernel32Name, <span style="color:#e6db74">L</span><span style="color:#e6db74">&#34;kernel32&#34;</span>);
+</span></span><span style="display:flex;"><span>PVOID hK32Dll;
+</span></span><span style="display:flex;"><span>status <span style="color:#f92672">=</span> <span style="color:#a6e22e">LdrGetDllHandle</span>(nullptr, nullptr, <span style="color:#f92672">&amp;</span>kernel32Name, <span style="color:#f92672">&amp;</span>hK32Dll);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ANSI_STRING fname;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">RtlInitAnsiString</span>(<span style="color:#f92672">&amp;</span>fname, <span style="color:#e6db74">&#34;LoadLibraryW&#34;</span>);
+</span></span><span style="display:flex;"><span>PVOID pLoadLibrary;
+</span></span><span style="display:flex;"><span>status <span style="color:#f92672">=</span> <span style="color:#a6e22e">LdrGetProcedureAddress</span>(hK32Dll, <span style="color:#f92672">&amp;</span>fname, <span style="color:#ae81ff">0</span>, <span style="color:#f92672">&amp;</span>pLoadLibrary);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Depois é só chamar RtlCreateUserThread passando a pLoadLibrary e nosso buffer
+</span></span></span></code></pre></div><p><strong>Enquanto eu estava escrevendo esse artigo, eu havia esquecido desse detalhe.</strong> Diante disso, eu procurei alguma solução para conseguirmos esse endereço, mas não achei nenhum jeito simples e elegante. Poderiamos tentar chamar a função <em>LdrLoadDll</em> da <em>ntdll.dll</em>, entretando ela recebe quatro parametros ao invés de apenas um. De qualquer forma, essa estratégia é válida caso você estivesse escrevendo uma aplicação que importasse a <em>kernel32.dll</em>. <strong>De qualquer forma, vamos para o plano B que será explicado na parte 05</strong>.</p>
+</div>
+				
+				<footer class="entry__footer">
+					
+<div class="entry__tags">
+			<a class="entry__tag btn" href="/blog/tags/native-dll/">native-dll</a>
+			<a class="entry__tag btn" href="/blog/tags/dev/">dev</a>
+			<a class="entry__tag btn" href="/blog/tags/loadlibrary/">loadlibrary</a>
+</div>
+					
+				</footer>
+				
+			</article>
+		</div>
+	</main>
+	
+	
+
+
+
+	
+
+	</div>
+	<footer class="footer">
+	<div class="footer__copyright">© 2024 RSI. <span class="footer__copyright-credits">Powered by <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/vimux/binario" rel="nofollow noopener" target="_blank">Binario</a> theme.</span></div>
+</footer>
+<script src="/blog/js/menu.js"></script>
+</body>
+</html>

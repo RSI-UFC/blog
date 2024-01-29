@@ -2,22 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://www.rsiproject.org/blog/tags/dev/</loc>
-    <lastmod>2023-12-25T09:03:20-08:00</lastmod>
+    <loc>https://www.rsiproject.org/blog/tags/cloud/</loc>
+    <lastmod>2023-12-28T09:03:20-08:00</lastmod>
   </url><url>
-    <loc>https://www.rsiproject.org/blog/posts/enumhandlers/</loc>
-    <lastmod>2023-12-25T09:03:20-08:00</lastmod>
+    <loc>https://www.rsiproject.org/blog/tags/cloudsec/</loc>
+    <lastmod>2023-12-28T09:03:20-08:00</lastmod>
+  </url><url>
+    <loc>https://www.rsiproject.org/blog/tags/dev/</loc>
+    <lastmod>2023-12-28T09:03:20-08:00</lastmod>
+  </url><url>
+    <loc>https://www.rsiproject.org/blog/tags/devsecops/</loc>
+    <lastmod>2023-12-28T09:03:20-08:00</lastmod>
+  </url><url>
+    <loc>https://www.rsiproject.org/blog/tags/loadlibrary/</loc>
+    <lastmod>2023-12-28T09:03:20-08:00</lastmod>
+  </url><url>
+    <loc>https://www.rsiproject.org/blog/posts/parte-04-native-dll-injection-using-loadlibrary/</loc>
+    <lastmod>2023-12-28T09:03:20-08:00</lastmod>
   </url><url>
     <loc>https://www.rsiproject.org/blog/tags/native-dll/</loc>
-    <lastmod>2023-12-25T09:03:20-08:00</lastmod>
+    <lastmod>2023-12-28T09:03:20-08:00</lastmod>
   </url><url>
     <loc>https://www.rsiproject.org/blog/posts/</loc>
-    <lastmod>2023-12-25T09:03:20-08:00</lastmod>
+    <lastmod>2023-12-28T09:03:20-08:00</lastmod>
   </url><url>
     <loc>https://www.rsiproject.org/blog/</loc>
-    <lastmod>2023-12-25T09:03:20-08:00</lastmod>
+    <lastmod>2023-12-28T09:03:20-08:00</lastmod>
+  </url><url>
+    <loc>https://www.rsiproject.org/blog/tags/sec/</loc>
+    <lastmod>2023-12-28T09:03:20-08:00</lastmod>
+  </url><url>
+    <loc>https://www.rsiproject.org/blog/posts/articles/</loc>
+    <lastmod>2023-12-28T09:03:20-08:00</lastmod>
+  </url><url>
+    <loc>https://www.rsiproject.org/blog/posts/sigma-rules-parte-01-introduction/</loc>
+    <lastmod>2023-12-28T09:03:20-08:00</lastmod>
   </url><url>
     <loc>https://www.rsiproject.org/blog/tags/</loc>
+    <lastmod>2023-12-28T09:03:20-08:00</lastmod>
+  </url><url>
+    <loc>https://www.rsiproject.org/blog/posts/enumhandlers/</loc>
     <lastmod>2023-12-25T09:03:20-08:00</lastmod>
   </url><url>
     <loc>https://www.rsiproject.org/blog/posts/frida/</loc>
