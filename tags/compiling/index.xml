@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>compiling on RSI</title>
+    <link>https://www.rsiproject.org/blog/tags/compiling/</link>
+    <description>Recent content in compiling on RSI</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>pt-br</language>
+    <lastBuildDate>Fri, 02 Feb 2024 18:24:51 -0300</lastBuildDate>
+    <atom:link href="https://www.rsiproject.org/blog/tags/compiling/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>O processo de compilação e linking</title>
+      <link>https://www.rsiproject.org/blog/posts/linkinglinking/</link>
+      <pubDate>Fri, 02 Feb 2024 18:24:51 -0300</pubDate>
+      <guid>https://www.rsiproject.org/blog/posts/linkinglinking/</guid>
+      <description>Por Mateus Santos&#xA;Softwares são compostos, em sua maioria, por códigos próprios, escritos pelo programador daquele software, e por códigos de bibliotecas, feito por outros programadores. Bibliotecas podem ser entendidas como códigos já escritos, reusáveis, que fornecem implementações de funções a serem utilizadas por diversos outros programas. Por exemplo, uma biblioteca de matemática fornece funções que podem ser utilizadas por um programa simples de somar dois números, um software de calculadora ou até mesmo programas para auxiliar estudos científicos em áreas que dependem de precisão de várias casas decimais.</description>
+    </item>
+  </channel>
+</rss>

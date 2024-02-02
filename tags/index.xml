@@ -6,8 +6,85 @@
     <description>Recent content in Tags on RSI</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>pt-br</language>
-    <lastBuildDate>Thu, 28 Dec 2023 09:03:20 -0800</lastBuildDate>
+    <lastBuildDate>Fri, 02 Feb 2024 18:24:51 -0300</lastBuildDate>
     <atom:link href="https://www.rsiproject.org/blog/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>compiling</title>
+      <link>https://www.rsiproject.org/blog/tags/compiling/</link>
+      <pubDate>Fri, 02 Feb 2024 18:24:51 -0300</pubDate>
+      <guid>https://www.rsiproject.org/blog/tags/compiling/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>c#</title>
+      <link>https://www.rsiproject.org/blog/tags/c#/</link>
+      <pubDate>Fri, 02 Feb 2024 09:03:20 -0800</pubDate>
+      <guid>https://www.rsiproject.org/blog/tags/c#/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>c&#43;&#43;</title>
+      <link>https://www.rsiproject.org/blog/tags/c&#43;&#43;/</link>
+      <pubDate>Fri, 02 Feb 2024 09:03:20 -0800</pubDate>
+      <guid>https://www.rsiproject.org/blog/tags/c&#43;&#43;/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>lowlevel</title>
+      <link>https://www.rsiproject.org/blog/tags/lowlevel/</link>
+      <pubDate>Fri, 02 Feb 2024 09:03:20 -0800</pubDate>
+      <guid>https://www.rsiproject.org/blog/tags/lowlevel/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>maldev</title>
+      <link>https://www.rsiproject.org/blog/tags/maldev/</link>
+      <pubDate>Fri, 02 Feb 2024 09:03:20 -0800</pubDate>
+      <guid>https://www.rsiproject.org/blog/tags/maldev/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>malware</title>
+      <link>https://www.rsiproject.org/blog/tags/malware/</link>
+      <pubDate>Fri, 02 Feb 2024 09:03:20 -0800</pubDate>
+      <guid>https://www.rsiproject.org/blog/tags/malware/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>operating systems</title>
+      <link>https://www.rsiproject.org/blog/tags/operating-systems/</link>
+      <pubDate>Fri, 02 Feb 2024 09:03:20 -0800</pubDate>
+      <guid>https://www.rsiproject.org/blog/tags/operating-systems/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>programming</title>
+      <link>https://www.rsiproject.org/blog/tags/programming/</link>
+      <pubDate>Fri, 02 Feb 2024 09:03:20 -0800</pubDate>
+      <guid>https://www.rsiproject.org/blog/tags/programming/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>win32</title>
+      <link>https://www.rsiproject.org/blog/tags/win32/</link>
+      <pubDate>Fri, 02 Feb 2024 09:03:20 -0800</pubDate>
+      <guid>https://www.rsiproject.org/blog/tags/win32/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>winapi</title>
+      <link>https://www.rsiproject.org/blog/tags/winapi/</link>
+      <pubDate>Fri, 02 Feb 2024 09:03:20 -0800</pubDate>
+      <guid>https://www.rsiproject.org/blog/tags/winapi/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>windows</title>
+      <link>https://www.rsiproject.org/blog/tags/windows/</link>
+      <pubDate>Fri, 02 Feb 2024 09:03:20 -0800</pubDate>
+      <guid>https://www.rsiproject.org/blog/tags/windows/</guid>
+      <description></description>
+    </item>
     <item>
       <title>cloud</title>
       <link>https://www.rsiproject.org/blog/tags/cloud/</link>

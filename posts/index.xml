@@ -6,8 +6,22 @@
     <description>Recent content in Posts on RSI</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>pt-br</language>
-    <lastBuildDate>Thu, 28 Dec 2023 09:03:20 -0800</lastBuildDate>
+    <lastBuildDate>Fri, 02 Feb 2024 18:24:51 -0300</lastBuildDate>
     <atom:link href="https://www.rsiproject.org/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>O processo de compilação e linking</title>
+      <link>https://www.rsiproject.org/blog/posts/linkinglinking/</link>
+      <pubDate>Fri, 02 Feb 2024 18:24:51 -0300</pubDate>
+      <guid>https://www.rsiproject.org/blog/posts/linkinglinking/</guid>
+      <description>Por Mateus Santos&#xA;Softwares são compostos, em sua maioria, por códigos próprios, escritos pelo programador daquele software, e por códigos de bibliotecas, feito por outros programadores. Bibliotecas podem ser entendidas como códigos já escritos, reusáveis, que fornecem implementações de funções a serem utilizadas por diversos outros programas. Por exemplo, uma biblioteca de matemática fornece funções que podem ser utilizadas por um programa simples de somar dois números, um software de calculadora ou até mesmo programas para auxiliar estudos científicos em áreas que dependem de precisão de várias casas decimais.</description>
+    </item>
+    <item>
+      <title>MalDev - 0x00</title>
+      <link>https://www.rsiproject.org/blog/posts/maldev0x00/</link>
+      <pubDate>Fri, 02 Feb 2024 09:03:20 -0800</pubDate>
+      <guid>https://www.rsiproject.org/blog/posts/maldev0x00/</guid>
+      <description>Por Igor Benevides&#xA;Introduction Hello! My name is Igor and I&amp;rsquo;m a professional cybersecurity consultant and researcher. I currently own OSEP certification, and I&amp;rsquo;m going through OSED. I love to study about cybersecurity and I&amp;rsquo;m a part of the RSI (Residência da Segurança da Informação) project, which is an extension project for UFC (Universidade Federal do Ceará). The goal of this new series is to teach malware development for anyone interested in this theme.</description>
+    </item>
     <item>
       <title>Kubernetes Network Policies</title>
       <link>https://www.rsiproject.org/blog/posts/k8s_network_policies/</link>
