@@ -4,124 +4,138 @@
     <title>Tags on RSI</title>
     <link>https://www.rsiproject.org/blog/tags/</link>
     <description>Recent content in Tags on RSI</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>pt-br</language>
-    <lastBuildDate>Fri, 02 Feb 2024 18:24:51 -0300</lastBuildDate>
+    <lastBuildDate>Tue, 08 Apr 2025 18:00:00 -0300</lastBuildDate>
     <atom:link href="https://www.rsiproject.org/blog/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>compiling</title>
+      <title>Malware-Research</title>
+      <link>https://www.rsiproject.org/blog/tags/malware-research/</link>
+      <pubDate>Tue, 08 Apr 2025 18:00:00 -0300</pubDate>
+      <guid>https://www.rsiproject.org/blog/tags/malware-research/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Trojans</title>
+      <link>https://www.rsiproject.org/blog/tags/trojans/</link>
+      <pubDate>Tue, 08 Apr 2025 18:00:00 -0300</pubDate>
+      <guid>https://www.rsiproject.org/blog/tags/trojans/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Compiling</title>
       <link>https://www.rsiproject.org/blog/tags/compiling/</link>
       <pubDate>Fri, 02 Feb 2024 18:24:51 -0300</pubDate>
       <guid>https://www.rsiproject.org/blog/tags/compiling/</guid>
       <description></description>
     </item>
     <item>
-      <title>c#</title>
-      <link>https://www.rsiproject.org/blog/tags/c#/</link>
+      <title>C#</title>
+      <link>https://www.rsiproject.org/blog/tags/c%23/</link>
       <pubDate>Fri, 02 Feb 2024 09:03:20 -0800</pubDate>
-      <guid>https://www.rsiproject.org/blog/tags/c#/</guid>
+      <guid>https://www.rsiproject.org/blog/tags/c%23/</guid>
       <description></description>
     </item>
     <item>
-      <title>c&#43;&#43;</title>
+      <title>C&#43;&#43;</title>
       <link>https://www.rsiproject.org/blog/tags/c&#43;&#43;/</link>
       <pubDate>Fri, 02 Feb 2024 09:03:20 -0800</pubDate>
       <guid>https://www.rsiproject.org/blog/tags/c&#43;&#43;/</guid>
       <description></description>
     </item>
     <item>
-      <title>lowlevel</title>
+      <title>Lowlevel</title>
       <link>https://www.rsiproject.org/blog/tags/lowlevel/</link>
       <pubDate>Fri, 02 Feb 2024 09:03:20 -0800</pubDate>
       <guid>https://www.rsiproject.org/blog/tags/lowlevel/</guid>
       <description></description>
     </item>
     <item>
-      <title>maldev</title>
+      <title>Maldev</title>
       <link>https://www.rsiproject.org/blog/tags/maldev/</link>
       <pubDate>Fri, 02 Feb 2024 09:03:20 -0800</pubDate>
       <guid>https://www.rsiproject.org/blog/tags/maldev/</guid>
       <description></description>
     </item>
     <item>
-      <title>malware</title>
+      <title>Malware</title>
       <link>https://www.rsiproject.org/blog/tags/malware/</link>
       <pubDate>Fri, 02 Feb 2024 09:03:20 -0800</pubDate>
       <guid>https://www.rsiproject.org/blog/tags/malware/</guid>
       <description></description>
     </item>
     <item>
-      <title>operating systems</title>
+      <title>Operating Systems</title>
       <link>https://www.rsiproject.org/blog/tags/operating-systems/</link>
       <pubDate>Fri, 02 Feb 2024 09:03:20 -0800</pubDate>
       <guid>https://www.rsiproject.org/blog/tags/operating-systems/</guid>
       <description></description>
     </item>
     <item>
-      <title>programming</title>
+      <title>Programming</title>
       <link>https://www.rsiproject.org/blog/tags/programming/</link>
       <pubDate>Fri, 02 Feb 2024 09:03:20 -0800</pubDate>
       <guid>https://www.rsiproject.org/blog/tags/programming/</guid>
       <description></description>
     </item>
     <item>
-      <title>win32</title>
+      <title>Win32</title>
       <link>https://www.rsiproject.org/blog/tags/win32/</link>
       <pubDate>Fri, 02 Feb 2024 09:03:20 -0800</pubDate>
       <guid>https://www.rsiproject.org/blog/tags/win32/</guid>
       <description></description>
     </item>
     <item>
-      <title>winapi</title>
+      <title>Winapi</title>
       <link>https://www.rsiproject.org/blog/tags/winapi/</link>
       <pubDate>Fri, 02 Feb 2024 09:03:20 -0800</pubDate>
       <guid>https://www.rsiproject.org/blog/tags/winapi/</guid>
       <description></description>
     </item>
     <item>
-      <title>windows</title>
+      <title>Windows</title>
       <link>https://www.rsiproject.org/blog/tags/windows/</link>
       <pubDate>Fri, 02 Feb 2024 09:03:20 -0800</pubDate>
       <guid>https://www.rsiproject.org/blog/tags/windows/</guid>
       <description></description>
     </item>
     <item>
-      <title>cloud</title>
+      <title>Cloud</title>
       <link>https://www.rsiproject.org/blog/tags/cloud/</link>
       <pubDate>Thu, 28 Dec 2023 09:03:20 -0800</pubDate>
       <guid>https://www.rsiproject.org/blog/tags/cloud/</guid>
       <description></description>
     </item>
     <item>
-      <title>cloudsec</title>
+      <title>Cloudsec</title>
       <link>https://www.rsiproject.org/blog/tags/cloudsec/</link>
       <pubDate>Thu, 28 Dec 2023 09:03:20 -0800</pubDate>
       <guid>https://www.rsiproject.org/blog/tags/cloudsec/</guid>
       <description></description>
     </item>
     <item>
-      <title>dev</title>
+      <title>Dev</title>
       <link>https://www.rsiproject.org/blog/tags/dev/</link>
       <pubDate>Thu, 28 Dec 2023 09:03:20 -0800</pubDate>
       <guid>https://www.rsiproject.org/blog/tags/dev/</guid>
       <description></description>
     </item>
     <item>
-      <title>devsecops</title>
+      <title>Devsecops</title>
       <link>https://www.rsiproject.org/blog/tags/devsecops/</link>
       <pubDate>Thu, 28 Dec 2023 09:03:20 -0800</pubDate>
       <guid>https://www.rsiproject.org/blog/tags/devsecops/</guid>
       <description></description>
     </item>
     <item>
-      <title>loadlibrary</title>
+      <title>Loadlibrary</title>
       <link>https://www.rsiproject.org/blog/tags/loadlibrary/</link>
       <pubDate>Thu, 28 Dec 2023 09:03:20 -0800</pubDate>
       <guid>https://www.rsiproject.org/blog/tags/loadlibrary/</guid>
       <description></description>
     </item>
     <item>
-      <title>native-dll</title>
+      <title>Native-Dll</title>
       <link>https://www.rsiproject.org/blog/tags/native-dll/</link>
       <pubDate>Thu, 28 Dec 2023 09:03:20 -0800</pubDate>
       <guid>https://www.rsiproject.org/blog/tags/native-dll/</guid>
@@ -135,35 +149,35 @@
       <description></description>
     </item>
     <item>
-      <title>sec</title>
+      <title>Sec</title>
       <link>https://www.rsiproject.org/blog/tags/sec/</link>
       <pubDate>Thu, 28 Dec 2023 09:03:20 -0800</pubDate>
       <guid>https://www.rsiproject.org/blog/tags/sec/</guid>
       <description></description>
     </item>
     <item>
-      <title>sigma</title>
+      <title>Sigma</title>
       <link>https://www.rsiproject.org/blog/tags/sigma/</link>
       <pubDate>Thu, 28 Dec 2023 09:03:20 -0800</pubDate>
       <guid>https://www.rsiproject.org/blog/tags/sigma/</guid>
       <description></description>
     </item>
     <item>
-      <title>flutter</title>
+      <title>Flutter</title>
       <link>https://www.rsiproject.org/blog/tags/flutter/</link>
       <pubDate>Wed, 20 Dec 2023 09:03:20 -0800</pubDate>
       <guid>https://www.rsiproject.org/blog/tags/flutter/</guid>
       <description></description>
     </item>
     <item>
-      <title>frida</title>
+      <title>Frida</title>
       <link>https://www.rsiproject.org/blog/tags/frida/</link>
       <pubDate>Wed, 20 Dec 2023 09:03:20 -0800</pubDate>
       <guid>https://www.rsiproject.org/blog/tags/frida/</guid>
       <description></description>
     </item>
     <item>
-      <title>kotlin</title>
+      <title>Kotlin</title>
       <link>https://www.rsiproject.org/blog/tags/kotlin/</link>
       <pubDate>Wed, 20 Dec 2023 09:03:20 -0800</pubDate>
       <guid>https://www.rsiproject.org/blog/tags/kotlin/</guid>

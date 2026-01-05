@@ -2,22 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://www.rsiproject.org/blog/posts/</loc>
+    <lastmod>2026-03-02T09:03:20-08:00</lastmod>
+  </url><url>
+    <loc>https://www.rsiproject.org/blog/</loc>
+    <lastmod>2026-03-02T09:03:20-08:00</lastmod>
+  </url><url>
+    <loc>https://www.rsiproject.org/blog/posts/malware-analysis-0x01/</loc>
+    <lastmod>2025-04-08T18:00:00-03:00</lastmod>
+  </url><url>
+    <loc>https://www.rsiproject.org/blog/tags/malware-research/</loc>
+    <lastmod>2025-04-08T18:00:00-03:00</lastmod>
+  </url><url>
+    <loc>https://www.rsiproject.org/blog/tags/</loc>
+    <lastmod>2025-04-08T18:00:00-03:00</lastmod>
+  </url><url>
+    <loc>https://www.rsiproject.org/blog/tags/trojans/</loc>
+    <lastmod>2025-04-08T18:00:00-03:00</lastmod>
+  </url><url>
+    <loc>https://www.rsiproject.org/blog/posts/malware-analysis-0x00/</loc>
+    <lastmod>2025-02-26T20:00:00-03:00</lastmod>
+  </url><url>
     <loc>https://www.rsiproject.org/blog/tags/compiling/</loc>
     <lastmod>2024-02-02T18:24:51-03:00</lastmod>
   </url><url>
     <loc>https://www.rsiproject.org/blog/posts/linkinglinking/</loc>
     <lastmod>2024-02-02T18:24:51-03:00</lastmod>
   </url><url>
-    <loc>https://www.rsiproject.org/blog/posts/</loc>
-    <lastmod>2024-02-02T18:24:51-03:00</lastmod>
-  </url><url>
-    <loc>https://www.rsiproject.org/blog/</loc>
-    <lastmod>2024-02-02T18:24:51-03:00</lastmod>
-  </url><url>
-    <loc>https://www.rsiproject.org/blog/tags/</loc>
-    <lastmod>2024-02-02T18:24:51-03:00</lastmod>
-  </url><url>
-    <loc>https://www.rsiproject.org/blog/tags/c#/</loc>
+    <loc>https://www.rsiproject.org/blog/tags/c%23/</loc>
     <lastmod>2024-02-02T09:03:20-08:00</lastmod>
   </url><url>
     <loc>https://www.rsiproject.org/blog/tags/c&#43;&#43;/</loc>
@@ -68,7 +80,7 @@
     <loc>https://www.rsiproject.org/blog/tags/loadlibrary/</loc>
     <lastmod>2023-12-28T09:03:20-08:00</lastmod>
   </url><url>
-    <loc>https://www.rsiproject.org/blog/posts/parte-04-native-dll-injection-using-loadlibrary/</loc>
+    <loc>https://www.rsiproject.org/blog/posts/parte-04---native-dll-injection-using-loadlibrary/</loc>
     <lastmod>2023-12-28T09:03:20-08:00</lastmod>
   </url><url>
     <loc>https://www.rsiproject.org/blog/tags/native-dll/</loc>
@@ -83,10 +95,10 @@
     <loc>https://www.rsiproject.org/blog/tags/sigma/</loc>
     <lastmod>2023-12-28T09:03:20-08:00</lastmod>
   </url><url>
-    <loc>https://www.rsiproject.org/blog/posts/sigma-rules-parte-01-introduction/</loc>
+    <loc>https://www.rsiproject.org/blog/posts/sigma-rules---parte-01---introduction/</loc>
     <lastmod>2023-12-28T09:03:20-08:00</lastmod>
   </url><url>
-    <loc>https://www.rsiproject.org/blog/posts/sigma-rules-parte-02-pipelines/</loc>
+    <loc>https://www.rsiproject.org/blog/posts/sigma-rules---parte-02---pipelines/</loc>
     <lastmod>2023-12-28T09:03:20-08:00</lastmod>
   </url><url>
     <loc>https://www.rsiproject.org/blog/posts/enumhandlers/</loc>

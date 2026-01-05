@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="pt-br">
 <head>
-	<meta name="generator" content="Hugo 0.121.1">
+	<meta name="generator" content="Hugo 0.131.0">
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="theme-color" content="#1b1b1b">
@@ -13,10 +13,13 @@
 	<link rel="icon" href="/blog/icons/32.png" sizes="32x32" type="image/png">
 	<link rel="alternate" type="application/rss+xml" href="/blog/index.xml" title="RSI">
 		
+  
+
+
 </head>
 <body class="body kind-home">
 	<header class="header">
-	<a class="logo" href="/blog">RSI</a>
+	<a class="logo" href="/blog/">RSI</a>
 	
 <nav class="main-nav" role="navigation">
 	<button id="toggle" class="main-nav__btn" aria-label="Menu toggle" aria-expanded="false" tabindex="0">
@@ -58,6 +61,23 @@
 			<div class="cards">
 					<div class="card card--2col">
 					<article class="entry card__box block">
+	<h1 class="entry__title title-excerpt"><a class="entry__title-link" href="/blog/posts/malware-analysis-0x01/">Laboratório Seguro para Análise de Malware - Análise de Malware 0x01</a></h1>
+	<div class="entry__content">Escrito por: Mateus Gualberto (Midnight Reverser) - orgulho de escrever sem IA envolvida no processo!
+Licença: livre, como todo conhecimento deve ser.
+Introdução Nesse artigo será apresentada uma abordagem para criação de um laboratório seguro local para análise de artefatos suspeitos ou maliciosos. É recomendado que o leitor siga o passo-a-passo na seção Passo-a-passo à risca, para evitar qualquer problema de configuração
+Para seguir a parte prática desse artigo, é recomendado um computador de 64-bits Intel/AMD (arquitetura amd64/x86-64, não funcionará bem nos hardwares ARM, como MacBooks M1), com pelo menos 8GB de RAM, e um software Hypervisor - recomendamos o Oracle VirtualBox.</div>
+</article>
+					</div>
+					<div class="card card--2col">
+					<article class="entry card__box block">
+	<h1 class="entry__title title-excerpt"><a class="entry__title-link" href="/blog/posts/malware-analysis-0x00/">Trojans: introdução, análise, BinDiff!</a></h1>
+	<div class="entry__content">Escrito por: Mateus Gualberto (Midnight Reverser) - orgulho de escrever sem IA envolvida no processo!
+Licença: livre, como todo conhecimento deve ser.
+Introdução Nesse artigo, irei demonstrar algumas técnicas para identificação de trojans - em especial, focado nas técnicas comumente utilizadas pelo Metasploit Framework. Ao fim, é esperado que o leitor aprenda o que é um trojan, seu funcionamento, trojans comuns, e por fim como identificar e localizar a carga maliciosa de um software adulterado.</div>
+</article>
+					</div>
+					<div class="card card--2col">
+					<article class="entry card__box block">
 	<h1 class="entry__title title-excerpt"><a class="entry__title-link" href="/blog/posts/linkinglinking/">O processo de compilação e linking</a></h1>
 	<div class="entry__content">Por Mateus Santos
 Softwares são compostos, em sua maioria, por códigos próprios, escritos pelo programador daquele software, e por códigos de bibliotecas, feito por outros programadores. Bibliotecas podem ser entendidas como códigos já escritos, reusáveis, que fornecem implementações de funções a serem utilizadas por diversos outros programas. Por exemplo, uma biblioteca de matemática fornece funções que podem ser utilizadas por um programa simples de somar dois números, um software de calculadora ou até mesmo programas para auxiliar estudos científicos em áreas que dependem de precisão de várias casas decimais.</div>
@@ -80,7 +100,7 @@ Este artigo explora a implementação de Network Policies no Kubernetes, concent
 					</div>
 					<div class="card card--2col">
 					<article class="entry card__box block">
-	<h1 class="entry__title title-excerpt"><a class="entry__title-link" href="/blog/posts/parte-04-native-dll-injection-using-loadlibrary/">Native DLL Injection Using LoadLibrary - Parte 04</a></h1>
+	<h1 class="entry__title title-excerpt"><a class="entry__title-link" href="/blog/posts/parte-04---native-dll-injection-using-loadlibrary/">Native DLL Injection Using LoadLibrary - Parte 04</a></h1>
 	<div class="entry__content">Por Davi Chaves
 O processo de injeção nativa de uma dll em um processo é bastante semelhante ao método convencional utilizando as funções da kernel32.dll. A lógica é exatamente igual:
 NTSTATUS NtProcessStartup(PPEB peb) { // Abre o processo alvo NtOpenProcess(...); // Alocamos um pouco de memória no processo alvo NtAllocateVirtualMemory(...); // Escrevemos o nome da nossa dll na memória do processo alvo NtWriteVirtualMemory(...); // Pegamos o endereço da função LoadLibraryW LdrGetProcedureAddress(&#34;LoadLibraryW&#34;.</div>
@@ -88,14 +108,14 @@ NTSTATUS NtProcessStartup(PPEB peb) { // Abre o processo alvo NtOpenProcess(...)
 					</div>
 					<div class="card card--2col">
 					<article class="entry card__box block">
-	<h1 class="entry__title title-excerpt"><a class="entry__title-link" href="/blog/posts/sigma-rules-parte-01-introduction/">SIGMA Rules Introduction - Parte 01</a></h1>
+	<h1 class="entry__title title-excerpt"><a class="entry__title-link" href="/blog/posts/sigma-rules---parte-01---introduction/">SIGMA Rules Introduction - Parte 01</a></h1>
 	<div class="entry__content">Por Davi Chaves
 Table of Contents SIGMA Rules - Parte 01 - Introduction Tipos de regras SIGMA Funcionamento Escrevendo uma SIGMA Rule Campo Logsource Campo Detection Selection Condition Image, CommandLine&hellip; what are they? Modificadores Exemplo de SIGMA Rule real Conclusão Reference Anteriormente, as detecções no âmbito do SIEM eram isoladas em compartimentos específicos vinculados a fornecedores ou plataformas particulares. Parceiros que pretendiam compartilhar conteúdo de detecção muitas vezes enfrentavam o desafio de traduzir uma consulta de um fornecedor para outro.</div>
 </article>
 					</div>
 					<div class="card card--2col">
 					<article class="entry card__box block">
-	<h1 class="entry__title title-excerpt"><a class="entry__title-link" href="/blog/posts/sigma-rules-parte-02-pipelines/">SIGMA Rules Pipelines - Parte 02</a></h1>
+	<h1 class="entry__title title-excerpt"><a class="entry__title-link" href="/blog/posts/sigma-rules---parte-02---pipelines/">SIGMA Rules Pipelines - Parte 02</a></h1>
 	<div class="entry__content">Por Davi Chaves
 Table of Contents SIGMA Rules - Parte 02 - Pipelines Objetivo Exemplo Thomas Patzke The Field Naming Problem Pipelines, what are they? Specification of Pipelines Specification of Transformations 1. field_name_mapping 1. add_condition Specification of Conditions RuleProcessingCondition Exemplo: LogsourceCondition DetectionItemProcessingCondition FieldNameProcessingCondition Exemplo: ExcludeFieldCondition Mapping Process Creation Rules Forçar um mapeamento O principal objetivo das SIGMAS Rules é descrever assinaturas de logs de maneira genérica, independente de fornecedor e ambiente.</div>
 </article>
@@ -116,30 +136,17 @@ Frida - Flutter &amp; Kotlin - Parte 1 Essa série de artigos é sobre métodos 
 Aplicação Flutter Foi criado uma aplicação em Flutter, utilizando a linguagem Dart e Kotlin chamando funções nativas de uma lib criada em c.</div>
 </article>
 					</div>
-					<div class="card card--2col">
-					<article class="entry card__box block">
-	<h1 class="entry__title title-excerpt"><a class="entry__title-link" href="/blog/posts/printf/">Escrevendo Aplicações Nativas para Windows - Parte 2</a></h1>
-	<div class="entry__content">Por Davi Chaves
-Até o momento, temos uma aplicação nativa, mas não conseguimos printar nada. Uma forma de construirmos essa funcionalidade seria fazer nosso processo native escrever no standard output do processo pai. Entretanto, eu acabei encontrando algumas dificuldades nessa solução. Dessa forma, vamos utilizar uma outra alternativa: criar um arquivo output.txt e escrever todos as saidas do nosso programa nele.
-Criando e Escrevendo em um Arquivo Para isso, vamos ter que utilizar duas APIs: NtCreateFile e NtWriteFile.</div>
-</article>
-					</div>
-					<div class="card card--2col">
-					<article class="entry card__box block">
-	<h1 class="entry__title title-excerpt"><a class="entry__title-link" href="/blog/posts/construindo-ambiente/">Escrevendo Aplicações Nativas para Windows - Parte 1</a></h1>
-	<div class="entry__content">Por Davi Chaves
-O objetivo desse artigo é montarmos um binário que dependa exclusivamente da ntdll.dll. Abaixo estão algumas funções exportadas por essa biblioteca.
-Using Native Functions Antes de construirmos uma aplicação que dependa apenas da ntdll.dll, vamos primeiro aprender a como utilizar as funções dessa biblioteca.
-Primeiro Método: Dynamic Linking Como toda função exportada, podemos utilizar a função GetProcAddress para acharmos o endereço de uma certa função e chama-la quando quisermos.</div>
-</article>
-					</div>
 			</div>
 	</main>
 	
+<div class="pagination block">
+				<span class="pagination__item pagination__item--active" data-total="2">1</span>
+				<a class="pagination__item pagination__item--desktop" href="/blog/page/2/">2</a>
+</div>
 
 	</div>
 	<footer class="footer">
-	<div class="footer__copyright">© 2024 RSI. <span class="footer__copyright-credits">Powered by <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/vimux/binario" rel="nofollow noopener" target="_blank">Binario</a> theme.</span></div>
+	<div class="footer__copyright">© 2026 RSI. <span class="footer__copyright-credits">Powered by <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/vimux/binario" rel="nofollow noopener" target="_blank">Binario</a> theme.</span></div>
 </footer>
 <script src="/blog/js/menu.js"></script>
 </body>

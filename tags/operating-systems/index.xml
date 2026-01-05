@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>operating systems on RSI</title>
+    <title>Operating Systems on RSI</title>
     <link>https://www.rsiproject.org/blog/tags/operating-systems/</link>
-    <description>Recent content in operating systems on RSI</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Operating Systems on RSI</description>
+    <generator>Hugo</generator>
     <language>pt-br</language>
     <lastBuildDate>Fri, 02 Feb 2024 09:03:20 -0800</lastBuildDate>
     <atom:link href="https://www.rsiproject.org/blog/tags/operating-systems/index.xml" rel="self" type="application/rss+xml" />
