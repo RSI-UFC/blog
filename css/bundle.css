@@ -742,6 +742,7 @@ button:not(:-moz-focusring):focus > .main-nav__btn-box { box-shadow: none; }
 	gap: 8px;
 	flex-wrap: wrap;
 	justify-content: center;
+	margin-top: 12px;
 }
 .author-card__link {
 	display: inline-flex;
