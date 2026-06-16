@@ -665,6 +665,117 @@ button:not(:-moz-focusring):focus > .main-nav__btn-box { box-shadow: none; }
 }
 .entry__meta-published, .entry__meta-lastmod { display: block; }
 
+.card__author {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 10px;
+}
+.card__author-avatar {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 1px solid var(--border-2);
+	flex-shrink: 0;
+}
+.card__author-name {
+	font-size: 0.78rem;
+	font-family: 'JetBrains Mono', monospace;
+	color: var(--text-3);
+}
+
+/* === AUTHORS PAGE === */
+.authors-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: 20px;
+	padding: 24px 0 0;
+}
+.author-card {
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: 16px;
+	padding: 28px 24px 24px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	transition: border-color 0.2s, box-shadow 0.2s;
+}
+.author-card:hover {
+	border-color: var(--border-2);
+	box-shadow: var(--shadow);
+}
+.author-card__avatar {
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 2px solid var(--accent-line);
+	margin-bottom: 14px;
+}
+.author-card__name {
+	font-size: 1rem;
+	font-weight: 800;
+	color: var(--text);
+	margin-bottom: 4px;
+}
+.author-card__role {
+	font-size: 0.78rem;
+	font-family: 'JetBrains Mono', monospace;
+	color: var(--accent);
+	margin-bottom: 10px;
+}
+.author-card__bio {
+	font-size: 0.85rem;
+	color: var(--text-2);
+	line-height: 1.55;
+	margin-bottom: 16px;
+	flex: 1;
+}
+.author-card__links {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+.author-card__link {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 5px 12px;
+	border: 1px solid var(--border-2);
+	border-radius: 8px;
+	font-size: 0.75rem;
+	font-family: 'JetBrains Mono', monospace;
+	color: var(--text-2);
+	text-decoration: none;
+	transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.author-card__link:hover {
+	color: var(--accent);
+	border-color: var(--accent-line);
+	background: var(--accent-soft);
+	text-decoration: none;
+}
+.author-card__certs {
+	display: flex;
+	gap: 6px;
+	flex-wrap: wrap;
+	justify-content: center;
+	margin-top: 10px;
+}
+.author-card__cert {
+	font-size: 0.7rem;
+	font-family: 'JetBrains Mono', monospace;
+	color: var(--text-3);
+	background: var(--surface-2);
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	padding: 2px 8px;
+}
+
 .entry__tags { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 4px; }
 .entry__tag {
 	display: inline-block;
