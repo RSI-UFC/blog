@@ -688,6 +688,37 @@ button:not(:-moz-focusring):focus > .main-nav__btn-box { box-shadow: none; }
 	color: var(--text-3);
 }
 
+/* === TAGS PAGE === */
+.tag-cloud {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	padding: 24px;
+	margin-top: 16px;
+}
+.tag-pill {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 6px 16px;
+	font-family: 'JetBrains Mono', monospace;
+	font-size: 0.8rem;
+	font-weight: 500;
+	color: var(--text-2);
+	background: var(--surface-2);
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	text-decoration: none;
+	white-space: nowrap;
+	transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.tag-pill:hover {
+	color: var(--accent);
+	border-color: var(--accent-line);
+	background: var(--accent-soft);
+	text-decoration: none;
+}
+
 /* === AUTHORS PAGE === */
 .authors-grid {
 	display: grid;
