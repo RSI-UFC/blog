@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520">
+  <!-- Window background -->
+  <rect width="800" height="520" rx="10" fill="#1c1e20"/>
+  <!-- Header bar -->
+  <rect width="800" height="42" rx="10" fill="#2a2c2e"/>
+  <rect y="32" width="800" height="10" fill="#2a2c2e"/>
+  <!-- Traffic lights -->
+  <circle cx="22" cy="21" r="7" fill="#ff5f57"/>
+  <circle cx="44" cy="21" r="7" fill="#febc2e"/>
+  <circle cx="66" cy="21" r="7" fill="#28c840"/>
+  <!-- Language label -->
+  <text x="776" y="26" font-family="'JetBrains Mono','Fira Code',monospace" font-size="13" fill="#666" text-anchor="end">C</text>
+
+  <!-- NTSYSCALLAPI -->
+  <text x="28" y="80" font-family="'JetBrains Mono','Fira Code',monospace" font-size="13.5" fill="#e0e0e0">NTSYSCALLAPI</text>
+  <!-- NTSTATUS -->
+  <text x="28" y="106" font-family="'JetBrains Mono','Fira Code',monospace" font-size="13.5" fill="#e0e0e0">NTSTATUS</text>
+  <!-- NTAPI -->
+  <text x="28" y="132" font-family="'JetBrains Mono','Fira Code',monospace" font-size="13.5" fill="#e0e0e0">NTAPI</text>
+  <!-- NtCreateFile( -->
+  <text x="28" y="158" font-family="'JetBrains Mono','Fira Code',monospace" font-size="13.5" fill="#4dc9a0">NtCreateFile</text>
+  <text x="190" y="158" font-family="'JetBrains Mono','Fira Code',monospace" font-size="13.5" fill="#e0e0e0">(</text>
+
+  <!-- _Out_ PHANDLE FileHandle, -->
+  <text x="52" y="184" font-family="'JetBrains Mono','Fira Code',monospace" font-size="13.5" fill="#e0e0e0">_Out_ PHANDLE FileHandle,</text>
+
+  <!-- _In_ ACCESS_MASK DesiredAccess, -->
+  <text x="52" y="210" font-family="'JetBrains Mono','Fira Code',monospace" font-size="13.5" fill="#e0e0e0">_In_ ACCESS_MASK DesiredAccess,</text>
+
+  <!-- _In_ POBJECT_ATTRIBUTES ObjectAttributes, -->
+  <text x="52" y="236" font-family="'JetBrains Mono','Fira Code',monospace" font-size="13.5" fill="#e0e0e0">_In_ POBJECT_ATTRIBUTES ObjectAttributes,</text>
+
+  <!-- _Out_ PIO_STATUS_BLOCK IoStatusBlock, -->
+  <text x="52" y="262" font-family="'JetBrains Mono','Fira Code',monospace" font-size="13.5" fill="#e0e0e0">_Out_ PIO_STATUS_BLOCK IoStatusBlock,</text>
+
+  <!-- _In_opt_ PLARGE_INTEGER AllocationSize, -->
+  <text x="52" y="288" font-family="'JetBrains Mono','Fira Code',monospace" font-size="13.5" fill="#e0e0e0">_In_opt_ PLARGE_INTEGER AllocationSize,</text>
+
+  <!-- _In_ ULONG FileAttributes, -->
+  <text x="52" y="314" font-family="'JetBrains Mono','Fira Code',monospace" font-size="13.5" fill="#e0e0e0">_In_ ULONG FileAttributes,</text>
+
+  <!-- _In_ ULONG ShareAccess, -->
+  <text x="52" y="340" font-family="'JetBrains Mono','Fira Code',monospace" font-size="13.5" fill="#e0e0e0">_In_ ULONG ShareAccess,</text>
+
+  <!-- _In_ ULONG CreateDisposition, -->
+  <text x="52" y="366" font-family="'JetBrains Mono','Fira Code',monospace" font-size="13.5" fill="#e0e0e0">_In_ ULONG CreateDisposition,</text>
+
+  <!-- _In_ ULONG CreateOptions, -->
+  <text x="52" y="392" font-family="'JetBrains Mono','Fira Code',monospace" font-size="13.5" fill="#e0e0e0">_In_ ULONG CreateOptions,</text>
+
+  <!-- _In_reads_bytes_opt_(EaLength) PVOID EaBuffer, -->
+  <text x="52" y="418" font-family="'JetBrains Mono','Fira Code',monospace" font-size="13.5" fill="#4dc9a0">_In_reads_bytes_opt_</text>
+  <text x="310" y="418" font-family="'JetBrains Mono','Fira Code',monospace" font-size="13.5" fill="#e0e0e0">(EaLength) PVOID EaBuffer,</text>
+
+  <!-- _In_ ULONG EaLength -->
+  <text x="52" y="444" font-family="'JetBrains Mono','Fira Code',monospace" font-size="13.5" fill="#e0e0e0">_In_ ULONG EaLength</text>
+
+  <!-- ); -->
+  <text x="28" y="470" font-family="'JetBrains Mono','Fira Code',monospace" font-size="13.5" fill="#e0e0e0">);</text>
+
+  <!-- Bottom rounded corners fill -->
+  <rect x="0" y="510" width="800" height="10" fill="#1c1e20"/>
+</svg>

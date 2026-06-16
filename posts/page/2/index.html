@@ -3,23 +3,24 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="theme-color" content="#1b1b1b">
-	<title>Posts | RSI</title>
+	<meta name="theme-color" content="#0d0d10">
+	<title>Posts | RSI - blog</title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="/blog/css/bundle.css">
-	<link rel="icon" href="/blog/icons/16.png" sizes="16x16" type="image/png">
+	<link rel="icon" href="/blog/favicon.ico" sizes="any">
 	<link rel="icon" href="/blog/icons/32.png" sizes="32x32" type="image/png">
-	<link rel="alternate" type="application/rss+xml" href="/blog/posts/index.xml" title="RSI">
-		
-  
-
-
+	<link rel="icon" href="/blog/icons/192.png" sizes="192x192" type="image/png">
+	<link rel="apple-touch-icon" href="/blog/apple-touch-icon.png">
+	<link rel="alternate" type="application/rss+xml" href="/blog/posts/index.xml" title="RSI - blog">
 </head>
 <body class="body kind-section">
 	<header class="header">
 	<a class="logo" href="/blog/">RSI</a>
-	
+
 <nav class="main-nav" role="navigation">
 	<button id="toggle" class="main-nav__btn" aria-label="Menu toggle" aria-expanded="false" tabindex="0">
 		<div class="main-nav__btn-box" tabindex="-1">
@@ -32,60 +33,64 @@
 	<ul id="menu" class="main-nav__list">
 			<li class="main-nav__item">
 				<a class="main-nav__link" href="/blog/authors/">
-					
 					<span class="main-nav__text">Autores</span>
-					
 				</a>
 			</li>
 			<li class="main-nav__item">
 				<a class="main-nav__link" href="/blog/tags/">
-					
 					<span class="main-nav__text">Tags</span>
-					
 				</a>
 			</li>
 			<li class="main-nav__item main-nav__item--active">
-				
-					
-					<span class="main-nav__text">Posts</span>
-					
-				
+				<span class="main-nav__text">Posts</span>
 			</li>
 	</ul>
 </nav>
 </header>
 	<div class="primary">
-	
+
 	<main class="main">
-		
+
 		<div class="page block">
 			<h1 class="page__title">Posts</h1>
-			
 		</div>
 		<div class="cards">
-			
-				<div class="card card--2col">
-					<article class="entry card__box block">
-	<h1 class="entry__title title-excerpt"><a class="entry__title-link" href="/blog/posts/printf/">Escrevendo Aplicações Nativas para Windows - Parte 2</a></h1>
-	<div class="entry__content">Por Davi Chaves
-Até o momento, temos uma aplicação nativa, mas não conseguimos printar nada. Uma forma de construirmos essa funcionalidade seria fazer nosso processo native escrever no standard output do processo pai. Entretanto, eu acabei encontrando algumas dificuldades nessa solução. Dessa forma, vamos utilizar uma outra alternativa: criar um arquivo output.txt e escrever todos as saidas do nosso programa nele.
-Criando e Escrevendo em um Arquivo Para isso, vamos ter que utilizar duas APIs: NtCreateFile e NtWriteFile.</div>
-</article>
+
+			<article class="entry card__box block">
+				<div class="card__thumb">
+					<a href="/blog/posts/printf/">
+						<figure class="entry__featured">
+							<img class="featured__img" src="/blog/posts/printf/thumbnail.svg" alt="">
+						</figure>
+					</a>
 				</div>
-			
-				<div class="card card--2col">
-					<article class="entry card__box block">
-	<h1 class="entry__title title-excerpt"><a class="entry__title-link" href="/blog/posts/construindo-ambiente/">Escrevendo Aplicações Nativas para Windows - Parte 1</a></h1>
-	<div class="entry__content">Por Davi Chaves
-O objetivo desse artigo é montarmos um binário que dependa exclusivamente da ntdll.dll. Abaixo estão algumas funções exportadas por essa biblioteca.
-Using Native Functions Antes de construirmos uma aplicação que dependa apenas da ntdll.dll, vamos primeiro aprender a como utilizar as funções dessa biblioteca.
-Primeiro Método: Dynamic Linking Como toda função exportada, podemos utilizar a função GetProcAddress para acharmos o endereço de uma certa função e chama-la quando quisermos.</div>
-</article>
+				<div class="card__body">
+					<h2 class="entry__title title-excerpt">
+						<a class="entry__title-link" href="/blog/posts/printf/">Escrevendo Aplicações Nativas para Windows - Parte 2</a>
+					</h2>
+					<p class="entry__excerpt">Implementando printf e I/O usando apenas funções nativas do Windows sem CRT — parte 2 da série de aplicações nativas.</p>
 				</div>
-			
+			</article>
+
+			<article class="entry card__box block">
+				<div class="card__thumb">
+					<a href="/blog/posts/construindo-ambiente/">
+						<figure class="entry__featured">
+							<img class="featured__img" src="/blog/posts/construindo-ambiente/thumbnail.png" alt="">
+						</figure>
+					</a>
+				</div>
+				<div class="card__body">
+					<h2 class="entry__title title-excerpt">
+						<a class="entry__title-link" href="/blog/posts/construindo-ambiente/">Escrevendo Aplicações Nativas para Windows - Parte 1</a>
+					</h2>
+					<p class="entry__excerpt">Construindo um binário nativo para Windows dependendo exclusivamente da ntdll.dll, sem CRT ou bibliotecas de runtime padrão.</p>
+				</div>
+			</article>
+
 		</div>
 	</main>
-	
+
 <div class="pagination block">
 				<a class="pagination__item pagination__item--desktop" href="/blog/posts/">1</a>
 				<span class="pagination__item pagination__item--active" data-total="2">2</span>
@@ -93,7 +98,7 @@ Primeiro Método: Dynamic Linking Como toda função exportada, podemos utilizar
 
 	</div>
 	<footer class="footer">
-	<div class="footer__copyright">© 2026 RSI. <span class="footer__copyright-credits">Powered by <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> and <a href="https://github.com/vimux/binario" rel="nofollow noopener" target="_blank">Binario</a> theme.</span></div>
+	<div class="footer__copyright">© 2026 RSI.</div>
 </footer>
 <script src="/blog/js/menu.js"></script>
 </body>
