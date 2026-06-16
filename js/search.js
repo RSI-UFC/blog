@@ -26,7 +26,7 @@
       var matchesTag    = !activeTag || tags.includes(activeTag);
 
       var show = matchesSearch && matchesTag;
-      card.parentElement.style.display = show ? '' : 'none';
+      card.style.display = show ? '' : 'none';
       if (show) visible++;
     });
 
