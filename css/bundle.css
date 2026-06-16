@@ -665,27 +665,27 @@ button:not(:-moz-focusring):focus > .main-nav__btn-box { box-shadow: none; }
 }
 .entry__meta-published, .entry__meta-lastmod { display: block; }
 
+.card__author {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	justify-content: flex-end;
+	margin-top: auto;
+	padding-top: 10px;
+}
 .card__author-badge {
-	position: absolute;
-	bottom: 10px;
-	right: 10px;
-	width: 36px;
-	height: 36px;
+	width: 32px;
+	height: 32px;
 	border-radius: 8px;
 	object-fit: cover;
-	border: 2px solid var(--surface);
-	box-shadow: var(--shadow-sm);
-	z-index: 2;
+	border: 1px solid var(--border-2);
 	display: block;
+	flex-shrink: 0;
 }
 .card__author-name {
-	display: block;
 	font-size: 0.75rem;
 	font-family: 'JetBrains Mono', monospace;
 	color: var(--text-3);
-	margin-top: auto;
-	padding-top: 8px;
-	text-align: right;
 }
 
 /* === AUTHORS PAGE === */
